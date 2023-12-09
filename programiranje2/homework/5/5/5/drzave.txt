@@ -1,0 +1,16 @@
+Hrvatska Zagreb Europa 3871833 56594
+Bosna_i_Hercegovina Sarajevo Europa 3531159 51129
+Srbija Beograd Europa 7022268 102350
+Njemačka Berlin Europa 83149300 357386
+Francuska Pariz Europa 67076000 640679
+Kina Peking Azija 1403500365 9596961
+Japan Tokio Azija 126010000 377975
+Taiwan Taipei Azija 23500000 36193
+Indija New_Delhi Azija 1352600000 3287263
+Kazahstan Nur-Sultan Azija 18276499 2724900
+Pakistan Islamabad Azija 212228286 803940
+Iran Teheran Azija 83992949 1648195
+Rusija Moskva Europa 146793744 17098246
+SAD Washington Sjeverna_Amerika 328239523 9833520
+Brazil Rio_de_Janeiro Južna_Amerika 209500000 8515767
+Australija Canberra Australija 25600000 7692024

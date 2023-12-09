@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>jednostavni DOM primjer</title>
+    <script>
+      function umetni_tekst() {
+        var p_elementi = document.getElementsByTagName("p");
+        var noviTekst = document.createTextNode("Ovo je neka recenica");
+        p_elementi[1].appendChild(noviTekst);
+      }
+      function izbrisi_tekst() {
+        var p_elementi = document.getElementsByTagName("p");
+        if (p_elementi[1].hasChildNodes()) {
+          p_elementi[1].removeChild(p_elementi[1].firstChild);
+        }
+      }
+    </script>
+  </head>
+  <body id="bodyNode"><p id="p1Node">Ovo je prvi paragraf</p>
+    Ovo je tijelo dokumenta
+    <p id="p2Node"></p>
+    <p id="p3Node"></p>
+    <input
+      type="button"
+      onclick="umetni_tekst()"
+      value="Umetni tekst u drugi P element"
+    />
+    <br /><br />
+    <input
+      type="button"
+      onclick="izbrisi_tekst()"
+      value="Izbrisi tekst od drugog P element"
+    />
+  </body>
+</html>

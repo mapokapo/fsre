@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kalkulator</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js"></script>
+  </head>
+  <body>
+    <h1>Moja stranica s kalkulatorom</h1>
+    <div id="div1">
+      <table class="tablica">
+        <tr>
+          <td colspan="3">
+            <input type="text" name="rezultat" id="rezultat" />
+          </td>
+          <td>
+            <button type="button" class="operator" id="c" onclick="izbrisi()">
+              C
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <button type="button" class="operand" onclick="dodajRezultat()">
+              1
+            </button>
+          </td>
+          <td>
+            <button type="button" class="operand" onclick="dodajRezultat()">
+              2
+            </button>
+          </td>
+          <td>
+            <button type="button" class="operand" onclick="dodajRezultat()">
+              3
+            </button>
+          </td>
+          <td>
+            <button type="button" class="operator" onclick="dodajRezultat()">
+              +
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <button type="button" class="operand" onclick="dodajRezultat()">
+              4
+            </button>
+          </td>
+          <td>
+            <button type="button" class="operand" onclick="dodajRezultat()">
+              5
+            </button>
+          </td>
+          <td>
+            <button type="button" class="operand" onclick="dodajRezultat()">
+              6
+            </button>
+          </td>
+          <td>
+            <button type="button" class="operator" onclick="dodajRezultat()">
+              -
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <button type="button" class="operand" onclick="dodajRezultat()">
+              7
+            </button>
+          </td>
+          <td>
+            <button type="button" class="operand" onclick="dodajRezultat()">
+              8
+            </button>
+          </td>
+          <td>
+            <button type="button" class="operand" onclick="dodajRezultat()">
+              9
+            </button>
+          </td>
+          <td>
+            <button type="button" class="operator" onclick="dodajRezultat()">
+              *
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <button type="button" class="operand" onclick="dodajRezultat()">
+              0
+            </button>
+          </td>
+          <td colspan="2">
+            <button
+              type="button"
+              class="operator dupligumb"
+              onclick="izvrsiIzraz()"
+            >
+              =
+            </button>
+          </td>
+          <td>
+            <button type="button" class="operator" onclick="dodajRezultat()">
+              /
+            </button>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

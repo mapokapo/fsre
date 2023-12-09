@@ -1,0 +1,51 @@
+2.1 Pristum resursima
+
+a) Pokreće li vaš preglednik HTTP verziju 1.0 ili 1.1?
+- Ako otvorimo Developer Tools u pretrazivacu koji koristimo (u mom slucaju Google Chrome), i odemo na tab Network, te posjetimo bilo koju stranicu, mozemo vidjeti listu svih zahtjeva prema web serveru. Prvi redak je najcesce zahtjev za HTML resurs, i uz njega dobijemo mnoge informacije o tom zahtjevu, ukljucujuci i stupac "Protocol" gdje pise koja se HTTP verzija koristi - HTTP/1.1.
+
+b) Koja je verzija HTTP-a poslužitelja pokrenuta kad pristupite npr sa sum.ba?
+- Na isti nacin kao za pitanje 1, mozemo u stupcu "Protocol" vidjeti da se koristi HTTP/1.1.
+
+c) Koje jezike (ako postoje) vas preglednik pokazuje da moze prihvatiti na posluzitelju?
+- Ako posjetimo neku stranicu u pregledniku (npr. sum.ba) i otvorimo Network tab na Developer Tools, te odaberemo HTTP zahtjev za HTML stranicu, mozemo vidjeti informacije o zahtjevu. U stupcu "Headers" mozemo vidjeti header-e (zaglavlja) koja smo mi poslali i s kojima nam je server odgovorio. Zaglavlje koje cesto mozemo pronaci je Content-Language zaglavlje u HTTTP odgovoru, koje sadrzi listu jezika koje server podrzava. Na stranici sum.ba ovog zaglavlja nema.
+
+d) Koja je IP adresa vaseg racunala? A koja je IP adresa sum.ba?
+- IP adresu racunala mozemo pronaci putem naredbe ipconfig u Command Promptu (lokalna/privatna IP adresa) ili putem stranice poput https://www.whatsmyip.org/ (javna IP adresa). Moja privatna IP adresa je 192.168.1.107, a javna 93.180.102.195. IP adresu domene sum.ba mozemo pronaci na dosta nacina, a najlaksi bi bio putem naredbi ping ili nslookup u Command Promptu. Adresa sum.ba je 212.39.111.33.
+
+e) Kada je HTML datoteka koju dohvacate zadnji put modificirana na posluzitelju?
+- Tu informaciju mozemo vidjeti putem zaglavlja "Last-Modified", koje sadrzi datum i vrijeme posljednje modifikacije datoteke na serveru. No dosta posluzitelja ne salje ovo zaglavlje, pa kao drugu opciju mozemo koristiti "Date" zaglavlje, koje sadrzi datum i vrijeme kada je datoteka poslana od strane servera.
+
+f) Koliko se bajtova sadrzaja vraca u vas preglednik?
+- Ovu informaciju mozemo vidjeti u zaglavlju "Content-Length" u HTTP odgovoru. U slucaju da posjetimo sum.ba, vrijednost ovog zaglavlja je 635322 bajta. To odgovara velicini HTML datoteke koja se vraca u tijelu odgovora.
+
+g) Koji softver/web posluzitelj posluzuje web stranicu na serveru, navedite odakle vidite?
+- U HTTP odgovoru sa nekog servera mozemo cesto pronaci zaglavlje "Server". Ovo zaglavlje oznacava server i verziju servera koji je posluzio zahtjev. U slucaju da posjetimo sum.ba, vrijednost ovog zaglavlja je "Apache/2.4.29 (Ubuntu)", sto znaci da je server Apache verzije 2.4.29.
+
+h) Koje jezike vas web preglednik moze prihvatiti?
+- U zaglavljima HTTP zahtjeva prema nekom serveru mozemo vidjeti Accept-Language zaglavlje, koje sadrzi listu jezika kojih nas preglednik podrzava. U slucaju da posjetimo sum.ba, ovo zaglavlje ima vrijednost: "en-US,en;q=0.9,hr-BA;q=0.8,hr;q=0.7". Ovo nam kaze da nas preglednik podrzava Engleski, Bosanski i Hrvatski jezik, sa odgovarajucim q-vrijednostima koje oznacavaju mjeru preference za svaki jezik. U ovom slucaju to znaci Engleski jezik ima q-vrijednost 0.9, sto znaci da je preferiraniji od Bosanskog i Hrvatskog jezika, koji imaju q-vrijednosti 0.8 i 0.7.
+
+2.2 Pristum razlicitim resursima
+
+Pristupite sljedećim resursima te za svaki resurs napišite HTTP odgovor koji dobijete (bez tijela), te za svaki resurs odgovorite:
+a) kojem MIME formatu resursa se radi:
+b) kolika je veličina resursa (u byte-ima)
+c) koja je verzija HTTP poslužitelja
+
+Resursi su:
+- http://web-admin.sum.ba/api/storage/pravilnik_mobilnost_1552858671_80.pdf
+- https://eucenje.sum.ba/moodle/pluginfile.php/1/core_admin/logocompact/300x300/1698654623/Logo%20sumarum.png
+- https://mirrors.edge.kernel.org/linuxmint/stable/10/sha256sum.txt
+
+Koristeci alat Insomnia, dobio sam sljedece rezultate:
+1)
+	a) MIME format mozemo pronaci u zaglavlju "Content-Type", koje u ovom slucaju ima vrijednost "application/pdf".
+	b) Velicina resursa inace pise u "Content-Length" zaglavlju, no posto ovaj zahtjev koristi znacajku HTTP-a unesenu u verziji 1.1 koja se zove chunked transfer encoding, tog zaglavlja nema. Chunked transfer encoding je nacin slanja podataka u HTTP odgovoru, gdje se podaci salju u "chunk-ovima" (dijelovima), a svaki chunk ima svoju velicinu. Chunked transfer encoding se koristi kada se velicina odgovora ne moze unaprijed odrediti, kao sto je slucaj sa dinamickim sadrzajem. No ako preuzmemo PDF datoteku i pogledamo njenu velicinu na nasem racunalu, vidjet cemo da je 799.7 KB. 
+	c) Verzija HTTP posluzitelja se moze pronaci u zaglavlju "Server", koje u ovom slucaju ima vrijednost "Apache/2.4.29 (Ubuntu)". HTTP verzija je 1.1.
+2)
+	a) MIME format je image/png.
+	b) Velicina resursa je 15684 bajta.
+	c) Verzija HTTP posluzitelja je "nginx/1.14.0 (Ubuntu)", a HTTP verzija je 1.1.
+3)
+	a) MIME format je text/plain.
+	b) Velicina resursa je 1087 bajta.
+	c) Vrijednost HTTP zaglavlja Server je u ovom slucaju "nginx" sto znaci da ne mozemo saznati verziju posluzitelja, no HTTP verzija je 1.1.

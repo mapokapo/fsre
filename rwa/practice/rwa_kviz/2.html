@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>jednostavni DOM primjer</title>
+    <script>
+      function dohvati_prvi_brat() {
+        alert(document.getElementById("p1Node").nextSibling.nodeName);
+        alert(document.getElementById("p1Node").nextSibling.nodeValue);
+        alert(
+          document.getElementById("p1Node").nextSibling.nextSibling.nodeName
+        );
+        alert(
+          document.getElementById("p1Node").nextSibling.nextSibling.nodeValue
+        );
+      }
+    </script>
+  </head>
+  <body id="bodyNode"><p id="p1Node">Ovo je prvi paragraf</p>
+    Ovo je tijelo dokumenta
+    <p id="p2Node"></p>
+    <p id="p3Node"></p>
+    <input
+      type="button"
+      onclick="dohvati_prvi_brat()"
+      value="Dohvati prvi i drugi sybling od prvog p elementa"
+    />
+  </body>
+</html>

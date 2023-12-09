@@ -1,0 +1,143 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  line-height: 1.3;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+}
+
+body {
+  background-color: #aec4e8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.wrapper {
+  width: 2000px;
+  height: 600px;
+  background-color: #608fdb;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  width: 100%;
+  height: 23%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  background-image: url("slike/computing_image.jpg");
+}
+
+.header__image {
+  width: 150px;
+  height: 150px;
+  position: absolute;
+  left: 10px;
+  top: 40px;
+  border: 5px solid royalblue;
+}
+
+.header__title {
+  color: blue;
+  font-size: 2.5rem;
+}
+
+.main {
+  display: flex;
+  width: 100%;
+  height: 77%;
+}
+
+.main__column {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.main__content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+.main__content > h1 {
+  color: blue;
+  font-size: 2.5rem;
+  position: absolute;
+  top: 0;
+}
+
+.main__content__paragraph {
+  font-size: 1.5rem;
+  font-weight: normal;
+  color: #fff;
+  text-align: center;
+}
+
+.main__footer {
+  width: calc(100% - 32px);
+  background-color: rgb(99, 122, 201);
+  padding: 10px 0;
+  display: flex;
+  margin: 16px;
+}
+
+.main__footer__span {
+  width: 100%;
+  text-align: center;
+  font-weight: bold;
+}
+
+.main__nav {
+  width: 25%;
+  height: 100%;
+  padding: 20px;
+}
+
+.main__nav__list {
+  list-style-type: none;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+.main__nav__list__item {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  background-color: rgb(5, 96, 171);
+  border-bottom: 5px solid rgb(3, 60, 107);
+}
+
+.main__nav__list__item__link {
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+  color: #fff;
+  font-size: 36px;
+  display: inline-block;
+  text-align: center;
+  padding-top: 4px;
+}

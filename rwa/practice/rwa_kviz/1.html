@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>jednostavni DOM primjer</title>
+    <script>
+      function dohvati_body_prvi_child() {
+        alert(document.getElementById("bodyNode").firstChild.nodeName);
+      }
+      function dohvati_body_zadnji_child() {
+        alert(document.getElementById("bodyNode").childNodes[4].nodeName);
+      }
+    </script>
+  </head>
+  <body id="bodyNode"><p id="p1Node">Ovo je prvi paragraf</p>
+    Ovo je tijelo dokumenta
+    <p id="p2Node"></p>
+    <p id="p3Node"></p>
+    <input
+      type="button"
+      onclick="dohvati_body_prvi_child()"
+      value="Dohvati od body elementa prvi child element"
+    />
+    <br /><br />
+    <input
+      type="button"
+      onclick="dohvati_body_zadnji_child()"
+      value="Dohvati od body elementa peti child element"
+    />
+  </body>
+</html>

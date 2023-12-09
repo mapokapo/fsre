@@ -1,0 +1,151 @@
+Domaća zadaća
+Leo Petrović 2174/RR
+07.11.2023.
+
+Zadatci 1.1 - DNS
+
+Zadatak 1.1.1 - Pokrenite nslookup. Što znači ovaj IP 212.39.98.163?
+Odgovor: U mom slučaju se pojavi IP 8.8.8.8. To je automatski ili ručno postavljeni IP na našem računalu za DNS server koji će se koristiti za rezoluciju naziva domene tj. URL-a. IP 8.8.8.8 odgovara Google-ovom DNS serveru.
+
+Zadatak 1.1.2 - Što se pojavi kada se unese fsre.sum.ba?
+Odgovor: Ponovno se pojavi IP adresa našeg trenutnog DNS servera, pa onda se pojavi non-authoritative answer sa adresom 212.39.115.142. Ovo je prava adresa od domene fsre.sum.ba. Non-authoritative znači da ovaj odgovor nismo dobili direktno od odgovarajućeg DNS servera za ovu domenu (authoritative DNS), nego smo dobili od nekog drugog servera npr. od našeg internetskog poslužitelja, koji jednostavno prosljeđuje pravi odgovor sa autoritativnog DNS-a.
+
+Zadatak 1.1.3 - Provjeri i sljedeće domene: sum.ba, www.hr, yahoo.com, google.com, utic.ba, laris.fesb.ba, osnove.tel.fer.hr, nastava.fesb.unist.hr
+Odgovori:
+  - sum.ba - non-authoritative answer 212.39.111.33
+  - www.hr - non-authoritative answer 161.53.19.58
+  - yahoo.com - non-authoritative answer, više adresa dobiveno (neke od kojih su IPV6) - prva adresa je 74.6.231.20. Razlog zašto ova domena ima više adresa je najčešće za svrhu smanjenja tereta na jedan DNS server, tako što se koriste mnogi DNS serveri koji se mijenjaju svaki put kada upitamo za adresu.
+  - google.com - non-authoritative answer, jedna IPV6 i jedna IPV4 adresa: 2a00:1450:400d:80c::200e i 142.251.39.14
+  - utic.ba - non-authoritative answer 195.130.35.144
+  - laris.fesb.hr non-authoritative answer, dobivena adresa 161.53.171.84, no također smo otkrili da je ova domena (laris.fesb.ba) alias (odnosno drugi naziv) za ovu domenu: vatra.fesb.hr. Oni vode na istu adresu.
+  - osnove.tel.fer.hr non-authoritative answer, dobivena adresa 161.53.17.200, no ova domena je također alias za drugu domenu: capitano.tel.fer.hr
+  - nastava.fesb.unist.hr non-authoritative answer, dobivena adresa 161.53.167.30, i ova domena je alias za domenu: publicsrv.fesb.unist.hr
+
+Zadatak 1.1.4 - Pokrenite nslookup -q=MX fsre.sum.ba. Što dobijete kao odgovor i kako ga interpretirate? Koje su to vrijednosti? Saznajte koji su MX zapisi za domene sum.ba i tel.net.ba?
+Odgovor: a) Kao odgovor dobijemo 5 ne-autoritativnih odgovora. Dobivene domene su adrese email servera za unesenu domenu. Ovi tzv. MX rekordi nam govore na koji način će se email poruke proslijediti na odgovarajuću domenu (u ovom slučaju fsre.sum.ba) putem SMTP protokola. Npr. ako pošaljemo email na imeprezime@fsre.sum.ba, jedan od ovih MX rekorda će se koristiti.
+b) Vrijednosti su:
+  - ALT1.ASPMX.L.GOOGLE.COM
+  - ALT2.ASPMX.L.GOOGLE.COM
+  - ASPMX2.GOOGLEMAIL.COM
+  - ASPMX.L.GOOGLE.COM
+  - ASPMX3.GOOGLEMAIL.COM
+c) MX zapisi za sum.ba su iste kao i za fsre.sum.ba. To znači da email poruke na domenu fsre.sum.ba i sum.ba koriste isti MX rekord te će ići na iste SMTP servere. MX zapisi za tel.net.ba su: mail4.tel.net.ba i mail3.tel.net.ba.
+
+Zadatak 1.1.5 - Osim MX i A, koje još vrste zapisa postoje za pojedinu domenu? Pokušajte putem nslookup alata saznati sve zapise i koje su vrijednosti za domenu fsre.sum.ba i još neku domenu po slobodnom izboru.
+Odgovor: Postoji 5 glavnih vrsta DNS zapisa: A rekord, AAAA rekord, CNAME rekord, NS rekord, i MX rekord. Za fsre.sum.ba to su:
+  - A (komanda: nslookup -q=A fsre.sum.ba) - 212.39.115.142
+  - AAAA (komanda: nslookup -q=AAAA fsre.sum.ba) - nema odgovora (AAAA rekord vraća IPV6 adrese za danu domenu, no fsre.sum.ba nema IPV6 adresu)
+  - CNAME (komanda: nslookup -q=CNAME fsre.sum.ba) - sum.ba
+  - NS (komanda: nslookup -q=NS fsre.sum.ba) - sum.ba
+  - MX (komanda: nslookup -q=MX fsre.sum.ba) - 5 adresa (odgovoreno u zadatku 1.1.4/b).
+Za youtube.com to su:
+  - A (komanda: nslookup -q=A youtube.com) - 142.250.201.206
+  - AAAA (komanda: nslookup -q=AAAA youtube.com) - 2a00:1450:400d:80a::200e
+  - CNAME (komanda: nslookup -q=CNAME youtube.com) - youtube.com
+  - NS (komanda: nslookup -q=NS youtube.com) - 4 odgovora: ns1.google.com, ns2.google.com, ns3.google.com, ns4.google.com
+  - MX (komanda: nslookup -q=MX youtube.com) - smtp.google.com
+
+Zadatak 1.1.6 - Pokreni nslookup.io za fsre.sum.ba, sum.ba, te još 2 proizvoljne adrese. Što dobijete za rezultat? Koje sve vrste i mogućnosti upita i dohvata zapisa su dostupne na jednom ovakvom alatu?
+Odgovor: a)
+  - fsre.sum.ba - A record: 212.39.115.142. MX record: ASMPX.L.GOOGLE.COM, ASPMX2.GOOGLEMAIL.COM, ASPMX3.GOOGLEMAIL.COM, ALT1.ASPMX.L.GOOGLE.COM, ALT2.ASPMX.L.GOOGLE.COM.
+  - sum.ba - A record: 212.39.111.33. NS record: ls2.tel.net.ba, uni-mo.sve-mo.ba, sysdns.carnet.hr. MX record: ASMPX.L.GOOGLE.COM, ASPMX2.GOOGLEMAIL.COM, ASPMX3.GOOGLEMAIL.COM, ALT1.ASPMX.L.GOOGLE.COM, ALT2.ASPMX.L.GOOGLE.COM.
+  - youtube.com - A record: 142.251.214.142. AAAA record: 2607:f8b0:4005:80c::200e. NS record: ns1.google.com, ns2.google.com, ns3.google.com, ns4.google.com. MX record: smtp.google.com.
+  - web.whatsapp.com - A record: 157.240.22.53. AAAA record: 2a03:2880:f231:c6:face:b00c:0:167. CNAME record: mmx-ds.cdn.whatsapp.net.
+b) Sa ovim alatom moguće je pretražiti ukupno 52 DNS zapisa, uključujući onih 5 glavnih (A, AAAA, CNAME, NS, MX). Među odgovorima za pojedinu domenu također možemo vidjeti TXT rekorde (služe za verifikaciju domene), SPF rekorde (služe za verifikaciju email poruka), i SOA rekorde (služe za verifikaciju autoritativnog DNS servera za domenu).
+
+Zadatci 1.2 - TCP i IP
+
+Zadatak 1.2.1 - Koristeći netstat alat pokrenuti sljedeće upite: netstat –n, netstat –n 5, netstat –a, netstat –b, netstat –e, netstat –n, netstat -o, netstat –p tcp, netstat –s, netstat –r, netstat –t, netstat –y, netstat -f | findstr google.
+Odgovor: a) Dobijemo dugu listu aktivnih konekcija sa sljedećim stupcima: Proto (protokol), Local Address, Foreign Address, State. Opcija -n zahtijeva da se ne vrši rezolucija naziva domena u IP adrese, nego se prikazuju samo IP adrese i portovi.
+b) Dobijemo istu dugu listu aktivnih konekcija po IP adresi kao iznad, ali se rezultati ažuriraju svakih 5 sekundi.
+c) Dobijemo listu svih aktivnih konekcija koja se uživo ažurira. Opcija -a uključuje i one koje su u stanju slušanja (listening).
+d) Dobijemo listu svih aktivnih konekcija koja se uživo ažurira. Opcija -b nam također govori naziv proces koji koristi svaku konekciju.
+e) Dobijemo rezultat koliko byteova je ukupno poslano i primljeno na svakoj konekciji.
+f) Već odgovoreno pod a).
+g) Dobijemo listu svih aktivnih konekcija koja se uživo ažurira. Opcija -o nam govori koji proces koristi koju konekciju putem njegovog PID-a (process ID).
+h) Dobijemo listu svih aktivnih konekcija koje se uživo ažurira. Opcija -p tcp nam govori da želimo samo TCP konekcije.
+i) Dobijemo statistiku za svaki protokol koji se koristi na računalu. Među uključenim podatcima su byteovi primljeni i poslani, koliko grešaka se dogodilo, broj otvorenih konekcija, itd.
+j) Dobijemo listu internetskih sučelja na računalu. Također dobijemo i tablicu ruta (podijeljeni na IPv4 i IPv6) koje nam daju podatke poput destinacije, maski mreže, gatewaya, itd.
+k) Dobijemo listu svih aktivnih konekcija koje se uživo ažurira. Opcija -t uključuje stupac offload state.
+l) Dobijemo listu svih aktivnih konekcija koja se uživo ažurira. Opcija -y uključuje stupac template koji odgovara TCP konekcijskom šablonu.
+m) Dobijemo listu svih aktivnih konekcija koja se uživo ažurira. Opcija -f pokazuje FQDN (fully qualified domain name) za svaku stranu konekciju. Dodavanjem | findstr google na kraj filtriraju se rezultati tako da se prikažu samo oni koji sadrže riječ google.
+
+Zadatak 1.2.2 - Koristeći alat tracert pokrenuti i odgovoriti (kopirajte odgovor): tracert [lokalnu ip adresu nekog fakultetskog računala], tracert laris.fesb.hr, tracert fsre.sum.ba, tracert www.google.com.
+Odgovor:
+a) ?
+b)
+Tracing route to vatra.fesb.hr [161.53.171.84]
+over a maximum of 30 hops:
+
+  1    <1 ms     1 ms    <1 ms  192.168.1.1
+  2     1 ms    <1 ms    <1 ms  192.168.0.1
+  3     7 ms     6 ms     6 ms  10.194.128.1
+  4     9 ms    12 ms     9 ms  mo-he-m-1-bu3.telemach.ba [77.77.197.64]
+  5     8 ms     8 ms     8 ms  77.77.201.12
+  6    17 ms    15 ms    22 ms  89.216.5.70
+  7    21 ms    20 ms    23 ms  carnet.cix.hr [185.1.87.65]
+  8     *        *        *     Request timed out.
+  9     *        *        *     Request timed out.
+ 10     *        *        *     Request timed out.
+ 11     *        *        *     Request timed out.
+ 12    29 ms    26 ms    24 ms  vatra.fesb.hr [161.53.171.84]
+
+Trace complete.
+c)
+Tracing route to fsre.sum.ba [212.39.115.142]
+over a maximum of 30 hops:
+
+  1    <1 ms    <1 ms    <1 ms  192.168.1.1
+  2     1 ms    <1 ms    <1 ms  192.168.0.1
+  3    12 ms     6 ms     6 ms  10.194.128.1
+  4     9 ms     8 ms     9 ms  sa-he-m-2-pc24.telemach.ba [77.77.201.110]
+  5     8 ms     8 ms     8 ms  77.77.201.3
+  6    31 ms    20 ms    22 ms  89.216.5.70
+  7    20 ms    20 ms    20 ms  hrvatski-telekom.cix.hr [185.1.87.88]
+  8    20 ms    20 ms    19 ms  gdr11-gtr11.ip.t-com.hr [195.29.240.106]
+  9    29 ms    30 ms    30 ms  195.29.110.206
+ 10    31 ms    29 ms    30 ms  mo1-brdrmo.tel.net.ba [85.94.144.190]
+ 11    30 ms    29 ms    29 ms  adsl2mo163.tel.net.ba [95.156.132.163]
+ 12    30 ms    30 ms    29 ms  adsl2mo169.tel.net.ba [95.156.132.169]
+ 13    32 ms    29 ms    29 ms  212.39.106.174
+ 14    28 ms    28 ms    30 ms  212.39.115.142
+
+Trace complete.
+d)
+Tracing route to www.google.com [142.250.180.196]
+over a maximum of 30 hops:
+
+  1    <1 ms    <1 ms    <1 ms  192.168.1.1
+  2     1 ms    <1 ms    <1 ms  192.168.0.1
+  3     6 ms     7 ms     5 ms  10.194.128.1
+  4     9 ms     7 ms     8 ms  mo-he-m-1-bu3.telemach.ba [77.77.197.64]
+  5     8 ms     9 ms     9 ms  77.77.201.12
+  6    20 ms    22 ms    23 ms  89.216.5.70
+  7    20 ms    15 ms    16 ms  bg-tp-m-0-hg5-7.sbb.rs [89.216.5.231]
+  8    21 ms    20 ms    20 ms  72.14.219.230
+  9    21 ms    22 ms    22 ms  209.85.245.45
+ 10    21 ms    21 ms    21 ms  142.251.65.225
+ 11    21 ms    21 ms    22 ms  bud02s33-in-f4.1e100.net [142.250.180.196]
+
+Trace complete.
+
+Zadatak 1.2.3 - Koristeći neki od online tracert/traceroute alata pokrenuti upite prema domenama: carnet.hr, fsre.sum.ba. Navedite čitav trace za a) i b) te za svaki posebno pokušajte doznati i domenska imena dohvaćenih računala i odgovoriti.
+Odgovor: Korišteni alat je https://traceroute-online.com/. a) Potpuni traceroute (početne adrese ovise o stranici koju koristimo pa su isključene iz odgovora):
+
+16 149.14.6.18 - COGENT-174, US - 149.14.0.0/16
+21 www.carnet.hr (193.198.241.34) - CARNET-AS J.Marohnica 5, 10000 Zagreb, HR - 193.198.0.0/16
+
+Krajnja domena je www.carnet.hr (193.198.241.34). Korišteni ISP je CARNET-AS. Prije nje smo prošli kroz jednu Hrvatsku domenu 149.14.6.18.
+b) Potpuni traceroute (početne adrese ovise o stranici koju koristimo pa su isključene iz odgovora):
+
+16 htr11-gte01.ip.t-com.hr (195.29.3.41) - T-HT Croatian Telecom Inc., HR - 195.29.0.0/18
+17 gdr11-htr11-3.ip.t-com.hr (195.29.144.26) T-HT Croatian Telecom Inc., HR - 195.29.128.0/18
+18 195.29.110.206 - T-HT Croatian Telecom Inc., HR - 195.29.64.0/18
+19 mo1-brdrmo.tel.net.ba (85.94.144.190) - HPTNET-AS, BA - 85.94.128.0/19
+20 adsl2mo163.tel.net.ba (95.156.132.163) - HPTNET-AS, BA - 95.156.128.0/20
+21 adsl2mo169.tel.net.ba (95.156.132.169) - HPTNET-AS, BA - 95.156.128.0/20
+22 212.39.106.174 - HPTNET-AS, BA - 212.39.96.0/19
+23 212.39.115.142 - HPTNET-AS, BA - 212.39.96.0/19
+
+Krajnja IP adresa je 212.39.115.142. Korišteni ISP je HPTNET-AS. Prije nje smo prošli kroz 3 domene u Hrvatskoj (htr11-gte01.ip.t-com.hr, gdr11-htr11-3.ip.t-com.hr, 195.29.110.206) i 4 u BiH (mo1-brdrmo.tel.net.ba, adsl2mo163.tel.net.ba, adsl2mo169.tel.net.ba, 212.39.106.174).
+

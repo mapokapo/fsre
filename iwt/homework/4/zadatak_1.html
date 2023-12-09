@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Zadatak 1</title>
+    <link rel="stylesheet" href="zadatak_1.css" />
+  </head>
+  <body>
+    <div class="wrapper">
+      <img src="slike/oblaci.jpeg" alt="Oblaci" class="left_image" />
+      <main class="main">
+        <header class="main__header">
+          <h1>Ispit iz IWT-a</h1>
+        </header>
+        <div class="main__content">
+          <section class="main__content_prijava_ispita">
+            <form class="main__content_prijava_ispita_form">
+              <table class="main__content_prijava_ispita_form_table" border="1">
+                <thead>
+                  <tr>
+                    <th colspan="2">
+                      <h1>Prijava ispita</h1>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <strong>Vaša email adresa:</strong>
+                    </td>
+                    <td>
+                      <input type="email" name="email" id="email" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <strong>Vaše ime i prezime:</strong>
+                    </td>
+                    <td>
+                      <input type="text" name="fullname" id="fullname" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <strong>Želite li prijaviti ispit?</strong>
+                    </td>
+                    <td>
+                      <label for="da">
+                        <span>DA</span>
+                        <input type="radio" name="prijaviti_ispit" id="da" />
+                      </label>
+                      <label for="ne">
+                        <span>NE</span>
+                        <input type="radio" name="prijaviti_ispit" id="dnea" />
+                      </label>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <strong
+                        >Odaberite predmet iz kojega želite prijaviti
+                        ispit:</strong
+                      >
+                    </td>
+                    <td>
+                      <select name="predmet" id="predmet">
+                        <option value="iwt">IWT</option>
+                        <option value="mat">MAT</option>
+                        <option value="fiz">FIZ</option>
+                        <option value="el">EL</option>
+                      </select>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </form>
+          </section>
+          <section class="main__content_potvrda">
+            <p>
+              Nakon što potvrdite prijavu, istu nije moguće poništiti. Ukoliko
+              ne pristupite ispitu, Vaša prijava se svakako evidentira i broji
+              kao izlazak na ispit. Ispit je moguće odjaviti najkasnije 24 sata
+              prije održavanja istog.
+            </p>
+            <div class="main__content_potvrda_buttons">
+              <button type="submit">Shvaćam</button>
+              <button type="submit">Odustajem</button>
+            </div>
+          </section>
+        </div>
+      </main>
+      <img src="slike/oblaci.jpeg" alt="Oblaci" class="right_image" />
+    </div>
+  </body>
+</html>

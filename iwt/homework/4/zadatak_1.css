@@ -1,0 +1,131 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  line-height: 1.3;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+}
+
+body {
+  background-color: #ece6f2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+div,
+section,
+header,
+img {
+  border: 3px solid purple;
+}
+
+.wrapper {
+  width: 1000px;
+  height: 500px;
+  background-color: #b77ff0;
+  display: flex;
+  padding: 7px;
+  gap: 10px;
+}
+
+.left_image,
+.right_image {
+  width: 100px;
+  height: 480px;
+  object-fit: cover;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  gap: 10px;
+}
+
+.main__header {
+  background-image: url("slike/beach.jpg");
+  background-size: cover;
+  background-position: center;
+  width: 760px;
+  height: 100px;
+  display: flex;
+  margin: auto;
+}
+
+.main__header > h1 {
+  font-size: 64px;
+  color: purple;
+  margin: auto;
+}
+
+.main__content {
+  display: flex;
+  gap: 40px;
+  width: 100%;
+  height: 80%;
+  border: none;
+}
+
+.main__content > section {
+  width: 100%;
+  height: 100%;
+  background-color: #b093bf;
+  padding: 10px;
+}
+
+.main__content_prijava_ispita_form_table {
+  background-color: #fff;
+  width: 100%;
+  height: 100%;
+}
+
+.main__content_prijava_ispita_form_table > thead > tr > th > h1 {
+  font-size: 34px;
+  padding-bottom: 16px;
+}
+
+.main__content_prijava_ispita_form_table > tbody > tr > td {
+  padding: 5px;
+}
+
+.main__content_prijava_ispita_form_table > tbody > tr > td > input {
+  width: 100%;
+}
+
+.main__content_prijava_ispita_form_table > tbody > tr > td:first-child {
+  width: 45%;
+}
+
+.main__content_potvrda {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.main__content_potvrda > p {
+  font: 18px;
+  color: #fff;
+  text-align: center;
+}
+
+.main__content_potvrda_buttons {
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+}
+
+.main__content_potvrda_buttons > button {
+  padding: 0 8px;
+}
