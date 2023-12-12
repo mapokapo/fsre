@@ -1,7 +1,5 @@
 package oop.optional_homework.zadaca1;
 
-import java.util.InputMismatchException;
-
 /*
 	Leo Petrović - 2174/RR
 
@@ -13,26 +11,19 @@ import java.util.Scanner;
 public class Zadatak2 {
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in);
-		Float a = null;
-		Float b = null;
 
-		do {
-			a = getNumber(scanner, "Unesite prvi broj");
-		} while (a == null);
-
-		do {
-			b = getNumber(scanner, "Unesite drugi broj");
-		} while (b == null);
+		float a = Utils.getFloat(scanner, "Unesite prvi broj: ");
+		float b = Utils.getFloat(scanner, "Unesite drugi broj: ");
 
 		while (true) {
 			printMenu();
-			
+
 			String operation = scanner.next();
 			if ("+-*/".indexOf(operation) == -1) {
 				System.out.println("Unos nije ispravan.");
 				continue;
 			}
-			
+
 			Float result = handleOperation(a, b, operation);
 
 			if (result == null) {
@@ -42,17 +33,6 @@ public class Zadatak2 {
 
 			System.out.println("Rezultat: " + result);
 			break;
-		}
-	}
-
-	private static Float getNumber(Scanner scanner, String message) {
-		System.out.println(message);
-		try {
-			return scanner.nextFloat();
-		} catch (InputMismatchException e) {
-			System.out.println("Unos nije ispravan.");
-			scanner.next();
-			return null;
 		}
 	}
 

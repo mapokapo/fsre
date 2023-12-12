@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scratch 4.1</title>
+  </head>
+  <body>
+    <h1>JS Skripte/vježbe sa auditornih vježbi (04)</h1>
+    <script>
+      function povrsina(a, b) {
+        return a * b;
+      }
+      function kvadrat(x) {
+        return x * x;
+      }
+
+      console.log(povrsina(5, 10));
+      console.log(kvadrat(7));
+    </script>
+    <script>
+      // funkcija koja ispisuje proste brojeve od 1 do n
+      function ispisiProste(n) {
+        for (let i = 2; i <= n; i++) {
+          let prost = true;
+          for (let j = 2; j <= i / 2; j++) {
+            if (i !== j && i % j === 0) {
+              prost = false;
+            }
+          }
+          if (prost) console.log(i);
+        }
+      }
+
+      ispisiProste(50);
+    </script>
+    <script>
+      // funkcija ispisuje sve savrsene brojeve
+      function ispisiSavrsene(n) {
+        for (let i = 0; i < n; i++) {
+          let sum = 0;
+          for (let j = 1; j < i; j++) {
+            if (i % j === 0) {
+              sum += j;
+            }
+          }
+          if (i === sum) {
+            console.log(i);
+          }
+        }
+      }
+
+      ispisiSavrsene(500);
+    </script>
+    <script>
+      let zbroj = (function (num1, num2) {
+        let rez = num1 + num2;
+        return rez;
+      })(3, 4);
+
+      console.log(zbroj);
+    </script>
+    <script>
+      let kvadratAnon = function (x) {
+        return x * x;
+      };
+      console.log(kvadratAnon(25));
+    </script>
+    <script>
+      var a = [1, 2, 3, 4, 5];
+      var putadva = function (n) {
+        return 2 * n;
+      };
+      var duplo = a.map(putadva);
+    </script>
+    <script>
+      const strings = [
+        "Ovo",
+        "je",
+        "My",
+        "prvi",
+        "komad",
+        "OF",
+        "JAVASCRIPT",
+        "koda",
+        "Koji",
+        "jE",
+        "proRADIO",
+      ];
+
+      function ispisiPosebne(arr) {
+        const newArr = arr.filter(
+          (s) => s.split("").some((l) => l.toUpperCase() === l) || s.length >= 5
+        );
+        console.log(newArr);
+      }
+
+      ispisiPosebne(strings);
+    </script>
+    <script>
+      const pas = {
+        ime: "Reks",
+        godina: 2,
+      };
+      pas.zvuk = function () {
+        return this.ime + " je rekao: AV AV!";
+      };
+
+      console.log(pas);
+      console.log(pas.zvuk());
+    </script>
+  </body>
+</html>

@@ -1,4 +1,13 @@
 package oop.optional_homework.zadaca1;
+
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /*
 	Leo Petrović - 2174/RR
 
@@ -10,52 +19,26 @@ import java.util.Scanner;
 public class Zadatak3 {
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in);
-		
-		System.out.println("Unesite datum u formatu dd.mm.yyyy");
-		String datumString = scanner.next();
+
+		LocalDate datum = Utils.getDate(scanner, "Unesite datum u formatu dd.MM.yyyy: ");
 		scanner.close();
 
-		String[] datum = datumString.split("\\.");
-		if (datum.length != 3) {
-			System.out.println("Unos nije ispravan.");
-			return;
-		}
+		int mjesec = datum.getMonthValue(); // 1-12
+		int godina = datum.getYear();
 
-		int dan = 0;
-		int mjesec = 0;
-		int godina = 0;
+		int brojDana = YearMonth.of(godina, mjesec).lengthOfMonth();
 
-		try {
-			dan = Integer.parseInt(datum[0]);
-			mjesec = Integer.parseInt(datum[1]);
-			godina = Integer.parseInt(datum[2]);
-		} catch (NumberFormatException e) {
-			System.out.println("Unos nije ispravan.");
-			return;
-		}
+		// int brojDana;
+		// List<Integer> brojDanaPoMjesecima = Arrays.asList(31, 28, 31, 30, 31, 30, 31,
+		// 31, 30, 31, 30, 31);
+		// if (mjesec == 2 && godina % 4 == 0 && (godina % 100 != 0 || godina % 400 ==
+		// 0)) {
+		// brojDana = 29;
+		// } else {
+		// brojDana = brojDanaPoMjesecima.get(mjesec - 1);
+		// }
 
-		if (dan < 1 || dan > 31 || mjesec < 1 || mjesec > 12 || godina < 1) {
-			System.out.println("Unos nije ispravan.");
-			return;
-		}
-
-		int brojDana = 0;
-		if (mjesec == 2) {
-			brojDana = 28;
-		} else if (mjesec % 2 == 0) {
-			brojDana = 30;
-		} else {
-			brojDana = 31;
-		}
-
-		System.out.println("Datum: " + dan + ". " + getMonthName(mjesec) + " " + godina + ".");
-		System.out.println("Mjesec " + getMonthName(mjesec) + " ima " + brojDana + " dana.");
-	}
-
-	private static String getMonthName(int mjesec) {
-		final String[] mjeseci = {"Siječanj", "Veljača", "Ožujak", "Travanj", "Svibanj", "Lipanj",
-			"Srpanj", "Kolovoz", "Rujan", "Listopad", "Studeni", "Prosinac"};
-
-		return mjeseci[mjesec - 1];
+		System.out.println("Datum: " + datum.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG)));
+		System.out.println("Mjesec " + datum.format(DateTimeFormatter.ofPattern("LLLL")) + " ima " + brojDana + " dana.");
 	}
 }

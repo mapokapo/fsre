@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <script>
+      // Imate sljedeći kod koji trebate dopuniti JS kodom na način da klikom na dugme uneseni tekst iz prvoga input prenesete u drugi input polje , a vrijednost prvog polja isprazniti.
+
+      const input1 = document.getElementsByTagName("input")[0];
+      const input2 = document.getElementsByTagName("input")[01];
+      const button = document.getElementsByTagName("input")[2];
+      button.addEventListener("click", (e) => {
+        input2.value = input1.value;
+        input1.value = "";
+      });
+    </script>
+    <h2>HTML Forms</h2>
+    <form>
+      <label for="fname">Prvo Polje:</label><br />
+      <input type="text" id="fname" name="fname" value="" /><br />
+      <label for="lname">Drugo polje name:</label><br />
+      <input type="text" id="lname" name="lname" value="" /><br />
+      <input type="button" value="klik" />
+    </form>
+  </body>
+</html>
