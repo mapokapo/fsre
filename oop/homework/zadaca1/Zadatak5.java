@@ -22,10 +22,13 @@ public class Zadatak5 {
 			brojevi.add(broj);
 		} while ((int) broj <= ((broj - ((int) broj)) * 100));
 
-		List<Integer> cijeliBrojevi = brojevi.stream().map(b -> (int) (float) b).toList();
+		List<Integer> cijeliBrojevi = brojevi.stream().map(Number::intValue).toList();
 
-		List<List<Integer>> znamenke2d = cijeliBrojevi.stream()
-				.map(b -> List.of(String.valueOf(b).split("")).stream().map(Integer::parseInt).toList()).toList();
+		List<String> stringZnamenke = cijeliBrojevi.stream().map(b -> String.valueOf(b)).toList();
+		List<List<String>> stringZnamenke2d = stringZnamenke.stream()
+				.map(b -> List.of(b.split(""))).toList();
+		List<List<Integer>> znamenke2d = stringZnamenke2d.stream()
+				.map(b -> b.stream().map(Integer::valueOf).toList()).toList();
 
 		List<Integer> znamenke = new ArrayList<>();
 		for (int i = 0; i < znamenke2d.size(); i++) {
@@ -50,7 +53,8 @@ public class Zadatak5 {
 			}
 		}
 
-		System.out.println("Najcesca znamenka je " + najcescaZnamenka + " i ponavlja se " + brojPonavljanjaNajcesceZnamenke
+		System.out.println("Najcesca znamenka u cijelobrojnim dijelovima brojeva je " + najcescaZnamenka + " i ponavlja se "
+				+ brojPonavljanjaNajcesceZnamenke
 				+ " puta.");
 
 		scanner.close();

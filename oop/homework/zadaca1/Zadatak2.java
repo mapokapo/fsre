@@ -33,10 +33,12 @@ public class Zadatak2 {
 			return;
 		}
 
-		// Npr. ako je rodendan 22.07.2003., onda ga ovdje postavljamo na 22.07.2023. (trenutna godina)
+		// Npr. ako je rodendan 22.07.2003., onda ga ovdje postavljamo na 22.07.2023.
+		// (trenutna godina)
 		datum = datum.withYear(LocalDate.now().getYear());
-		
-		// Ako je rodendan vec prosao u trenutnoj godini, onda gledamo kada ce biti sljedece godine
+
+		// Ako je rodendan vec prosao u trenutnoj godini, onda gledamo kada ce biti
+		// sljedece godine
 		if (datum.isBefore(LocalDate.now())) {
 			datum = datum.plusYears(1);
 		}
