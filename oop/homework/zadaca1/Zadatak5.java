@@ -22,13 +22,12 @@ public class Zadatak5 {
 			brojevi.add(broj);
 		} while ((int) broj <= ((broj - ((int) broj)) * 100));
 
-		List<Integer> cijeliBrojevi = brojevi.stream().map(Number::intValue).toList();
-
+		List<Integer> cijeliBrojevi = brojevi.stream().map(b -> b.intValue()).toList();
 		List<String> stringZnamenke = cijeliBrojevi.stream().map(b -> String.valueOf(b)).toList();
 		List<List<String>> stringZnamenke2d = stringZnamenke.stream()
 				.map(b -> List.of(b.split(""))).toList();
 		List<List<Integer>> znamenke2d = stringZnamenke2d.stream()
-				.map(b -> b.stream().map(Integer::valueOf).toList()).toList();
+				.map(l -> l.stream().map(b -> Integer.valueOf(b)).toList()).toList();
 
 		List<Integer> znamenke = new ArrayList<>();
 		for (int i = 0; i < znamenke2d.size(); i++) {
