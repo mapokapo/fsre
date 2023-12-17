@@ -1,0 +1,7 @@
+{
+  "files.associations": {
+    "*.svelte": "svelte",
+    "*.css": "css",
+    "string.h": "c"
+  }
+}
