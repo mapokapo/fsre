@@ -48,7 +48,6 @@ class Osoba {
 public class Zadatak2 {
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in);
-		System.out.println(scanner.delimiter());
 
 		List<Osoba> osobe = new ArrayList<>();
 

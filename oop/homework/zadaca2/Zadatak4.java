@@ -9,7 +9,7 @@ import java.util.Scanner;
 /*
  * Leo Petrović - 2174/RR
  * 
- * Zadatak 3. - Napisati program u Javi koji unosi ime i prezime te ocjenu s ispita za 15 studenata. Potom kreirati niz polozili u koji se spremaju studenti koji su položili ispit. Program ispisuje podatke o studentima koji su položili ispit sortirane po abecedi. Za navedene nizove koristiti razred ArrayList.
+ * Zadatak 4. - Napisati program u Javi koji unosi ime i prezime te ocjenu s ispita za 15 studenata. Potom kreirati niz polozili u koji se spremaju studenti koji su položili ispit. Program ispisuje podatke o studentima koji su položili ispit sortirane po abecedi. Za navedene nizove koristiti razred ArrayList.
 */
 
 class Student2 {

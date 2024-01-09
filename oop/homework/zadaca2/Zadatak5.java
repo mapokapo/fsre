@@ -8,7 +8,7 @@ import java.util.Scanner;
 /*
  * Leo Petrović - 2174/RR
  * 
- * Zadatak 3. - Napisati program u Javi koji unosi 20 cijelih brojeva u niz koristeći razred List te ispisati uneseni niz brojeva. Potom sve neparne brojeve na parnim mjestima zamijeniti najvećim neparnim unesenim brojem te ispisati novo stanje niza.
+ * Zadatak 5. - Napisati program u Javi koji unosi 20 cijelih brojeva u niz koristeći razred List te ispisati uneseni niz brojeva. Potom sve neparne brojeve na parnim mjestima zamijeniti najvećim neparnim unesenim brojem te ispisati novo stanje niza.
 */
 
 public class Zadatak5 {
