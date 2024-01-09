@@ -16,8 +16,8 @@ import java.util.Scanner;
 */
 
 class Osoba {
-	public String imePrezime;
-	public LocalDate datumRodjenja;
+	private String imePrezime;
+	private LocalDate datumRodjenja;
 
 	public Osoba() {
 	}
@@ -26,6 +26,23 @@ class Osoba {
 		this.imePrezime = imePrezime;
 		this.datumRodjenja = datumRodjenja;
 	}
+
+	public String getImePrezime() {
+		return imePrezime;
+	}
+
+	public void setImePrezime(String imePrezime) {
+		this.imePrezime = imePrezime;
+	}
+
+	public LocalDate getDatumRodjenja() {
+		return datumRodjenja;
+	}
+
+	public void setDatumRodjenja(LocalDate datumRodjenja) {
+		this.datumRodjenja = datumRodjenja;
+	}
+
 }
 
 public class Zadatak2 {
@@ -39,10 +56,10 @@ public class Zadatak2 {
 		while (i < 5) {
 			Osoba osoba = new Osoba();
 			System.out.print("Unesite ime, prezime, i datum rodjenja osobe odvojene razmakom: ");
-			osoba.imePrezime = scanner.next() + " " + scanner.next();
+			osoba.setImePrezime(scanner.next() + " " + scanner.next());
 			try {
 				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d.M.yyyy");
-				osoba.datumRodjenja = LocalDate.parse(scanner.next(), formatter);
+				osoba.setDatumRodjenja(LocalDate.parse(scanner.next(), formatter));
 			} catch (DateTimeParseException e) {
 				System.out.println("Uneseni datum nije ispravan.");
 				continue;
@@ -55,11 +72,11 @@ public class Zadatak2 {
 
 		scanner.close();
 
-		Collections.sort(osobe, Comparator.comparing(o -> o.imePrezime));
+		Collections.sort(osobe, Comparator.comparing(Osoba::getImePrezime));
 
 		for (i = 0; i < 5; i++) {
-			System.out.println("Osoba " + (i + 1) + ": " + osobe.get(i).imePrezime + ", datum rodjenja: "
-					+ osobe.get(i).datumRodjenja.format(DateTimeFormatter.ofPattern("d.M.yyyy")));
+			System.out.println("Osoba " + (i + 1) + ": " + osobe.get(i).getImePrezime() + ", datum rodjenja: "
+					+ osobe.get(i).getDatumRodjenja().format(DateTimeFormatter.ofPattern("d.M.yyyy")));
 		}
 	}
 }
