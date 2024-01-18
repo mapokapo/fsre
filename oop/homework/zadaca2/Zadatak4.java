@@ -53,23 +53,41 @@ public class Zadatak4 {
 		List<Student2> studenti = new ArrayList<>();
 
 		int i = 0;
-		while (i < 15) {
-			Student2 student = new Student2();
+		/*
+		 * while (i < 15) {
+		 * Student2 student = new Student2();
+		 * 
+		 * System.out.print("Unesite ime, prezime, i ocjenu sa ispita za studenta: ");
+		 * 
+		 * student.setImePrezime(scanner.next() + " " + scanner.next());
+		 * try {
+		 * student.setOcjena(Integer.parseInt(scanner.next()));
+		 * } catch (NumberFormatException e) {
+		 * System.out.println("Broj nije validan.");
+		 * continue;
+		 * }
+		 * 
+		 * studenti.add(student);
+		 * 
+		 * i++;
+		 * }
+		 */
 
-			System.out.print("Unesite ime, prezime, i ocjenu sa ispita za studenta: ");
-
-			student.setImePrezime(scanner.next() + " " + scanner.next());
-			try {
-				student.setOcjena(Integer.parseInt(scanner.next()));
-			} catch (NumberFormatException e) {
-				System.out.println("Broj nije validan.");
-				continue;
-			}
-
-			studenti.add(student);
-
-			i++;
-		}
+		studenti.add(new Student2("Ivo Ivic", 3));
+		studenti.add(new Student2("Mate Matic", 2));
+		studenti.add(new Student2("Pero Peric", 1));
+		studenti.add(new Student2("Ante Antic", 1));
+		studenti.add(new Student2("Jure Juric", 4));
+		studenti.add(new Student2("Marko Markic", 1));
+		studenti.add(new Student2("Ime Prezime", 1));
+		studenti.add(new Student2("Petar Peric", 2));
+		studenti.add(new Student2("Matej Matic", 4));
+		studenti.add(new Student2("John Doe", 3));
+		studenti.add(new Student2("Jane Doe", 3));
+		studenti.add(new Student2("Mirko Mirkic", 5));
+		studenti.add(new Student2("Peter Parker", 1));
+		studenti.add(new Student2("Ilija Barac", 2));
+		studenti.add(new Student2("Josip Jozic", 2));
 
 		scanner.close();
 

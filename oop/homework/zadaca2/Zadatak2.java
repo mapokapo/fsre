@@ -71,7 +71,7 @@ public class Zadatak2 {
 
 		scanner.close();
 
-		Collections.sort(osobe, Comparator.comparing(Osoba::getImePrezime));
+		Collections.sort(osobe, Comparator.comparing(o -> o.getImePrezime()));
 
 		for (i = 0; i < 5; i++) {
 			System.out.println("Osoba " + (i + 1) + ": " + osobe.get(i).getImePrezime() + ", datum rodjenja: "
