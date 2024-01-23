@@ -1,5 +1,9 @@
 package oop.homework.zadaca4;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 /*
  * Leo Petrović - 2174/RR
  * 
@@ -74,7 +78,8 @@ abstract class DokumentKnjiznice {
 	public abstract double dajIznosPologa();
 
 	public String toString() {
-		return String.format("Nepoznati dokument (ID: %d): %s", this.getID(), this.getNazivDokumenta());
+		return String.format("Nepoznati dokument (ID: %d): %s (%s)", this.getID(), this.getNazivDokumenta(),
+				this.jeLiPotrebanPolog() ? ("Iznos pologa: " + this.dajIznosPologa()) : "Nema pologa");
 	}
 }
 
@@ -109,7 +114,8 @@ class Knjiga extends DokumentKnjiznice {
 
 	@Override
 	public String toString() {
-		return String.format("Knjiga (ID: %d): %s - %s", this.getID(), this.getNazivDokumenta(), this.getAutor());
+		return String.format("Knjiga (ID: %d): %s - %s (%s)", this.getID(), this.getNazivDokumenta(), this.getAutor(),
+				this.jeLiPotrebanPolog() ? ("Iznos pologa: " + this.dajIznosPologa()) : "Nema pologa");
 	}
 }
 
@@ -152,8 +158,9 @@ class Casopis extends DokumentKnjiznice {
 
 	@Override
 	public String toString() {
-		return String.format("Casopis (ID: %d, Kategorija: %s): %s (Izdanje #%d)", this.getID(),
-				this.getKategorijaSadrzaja(), this.getNazivDokumenta(), this.getIzdanje());
+		return String.format("Casopis (ID: %d, Kategorija: %s): %s, Izdanje #%d (%s)", this.getID(),
+				this.getKategorijaSadrzaja(), this.getNazivDokumenta(), this.getIzdanje(),
+				this.jeLiPotrebanPolog() ? ("Iznos pologa: " + this.dajIznosPologa()) : "Nema pologa");
 	}
 }
 
@@ -187,8 +194,9 @@ class DigitalniDokument extends DokumentKnjiznice {
 
 	@Override
 	public String toString() {
-		return String.format("Digitalni Dokument (ID: %d): %s [%s]", this.getID(),
-				this.getNazivDokumenta(), this.getTip());
+		return String.format("Digitalni Dokument (ID: %d): %s [%s] (%s)", this.getID(),
+				this.getNazivDokumenta(), this.getTip(),
+				this.jeLiPotrebanPolog() ? ("Iznos pologa: " + this.dajIznosPologa()) : "Nema pologa");
 	}
 }
 
@@ -222,8 +230,9 @@ class E_Dokument extends DokumentKnjiznice {
 
 	@Override
 	public String toString() {
-		return String.format("E-Dokument (ID: %d): %s [%s]", this.getID(),
-				this.getNazivDokumenta(), this.getNesto());
+		return String.format("E-Dokument (ID: %d): %s [%s] (%s)", this.getID(),
+				this.getNazivDokumenta(), this.getNesto(),
+				this.jeLiPotrebanPolog() ? ("Iznos pologa: " + this.dajIznosPologa()) : "Nema pologa");
 	}
 }
 
@@ -258,8 +267,10 @@ class Udzbenik extends Knjiga {
 
 	@Override
 	public String toString() {
-		return String.format("Udzbenik za predmet \"%s\" (knjiga, ID: %d): %s - %s", this.getPredmet(), this.getID(),
-				this.getNazivDokumenta(), this.getAutor());
+		return String.format("Udzbenik za predmet \"%s\" (knjiga, ID: %d): %s - %s. (%s)",
+				this.getPredmet(), this.getID(),
+				this.getNazivDokumenta(), this.getAutor(),
+				this.jeLiPotrebanPolog() ? ("Iznos pologa: " + this.dajIznosPologa()) : "Nema pologa");
 	}
 }
 
@@ -295,9 +306,10 @@ class Rjecnik extends Knjiga {
 
 	@Override
 	public String toString() {
-		return String.format("Rjecnik za %s i %s jezik (knjiga, ID: %d): %s - %s", this.getPrviJezik(),
+		return String.format("Rjecnik za %s i %s jezik (knjiga, ID: %d): %s - %s (%s)", this.getPrviJezik(),
 				this.getDrugiJezik(), this.getID(),
-				this.getNazivDokumenta(), this.getAutor());
+				this.getNazivDokumenta(), this.getAutor(),
+				this.jeLiPotrebanPolog() ? ("Iznos pologa: " + this.dajIznosPologa()) : "Nema pologa");
 	}
 }
 
@@ -306,7 +318,129 @@ class Rjecnik extends Knjiga {
 // razred čiji će se objekt inicijalizirati) te se ispisuju podaci za svakog od
 // njih.
 public class Zadatak2 {
-	public static void main(String[] args) {
+	private static Random rng = new Random();
 
+	public static void main(String[] args) {
+		List<DokumentKnjiznice> dokumenti = new ArrayList<>();
+
+		for (int i = 0; i < 50; i++) {
+			switch (rng.nextInt(0, 6)) {
+				case 0:
+					dokumenti.add(new Knjiga(i, getNazivDokumenta(i), getNazivAutora(i)));
+					break;
+				case 1:
+					dokumenti
+							.add(new Casopis(i, getNazivDokumenta(i), getNazivKategorijeSadrzaja(i), rng.nextInt(1, 100)));
+					break;
+				case 2:
+					dokumenti.add(new DigitalniDokument(i, getNazivDokumenta(i), "Tip " + rng.nextInt(1, 100)));
+					break;
+				case 3:
+					dokumenti.add(new E_Dokument(i, getNazivDokumenta(i), "Random #" + rng.nextInt(1, 100)));
+					break;
+				case 4:
+					dokumenti.add(new Udzbenik(i, getNazivDokumenta(i), getNazivAutora(i),
+							getNazivPredmeta(i)));
+					break;
+				case 5:
+					dokumenti.add(new Rjecnik(i, getNazivDokumenta(i), getNazivAutora(i),
+							getNazivJezika(i), getNazivJezika(i + 1)));
+					break;
+				default:
+					throw new RuntimeException("Pogreska");
+			}
+		}
+
+		for (DokumentKnjiznice dok : dokumenti) {
+			System.out.println(dok);
+		}
+	}
+
+	private static String getNazivDokumenta(int i) {
+		final List<String> naziviDokumenata = new ArrayList<>();
+		naziviDokumenata.add("Enigmatic Echo");
+		naziviDokumenata.add("Serene Haven");
+		naziviDokumenata.add("Luminous Whispers");
+		naziviDokumenata.add("Resplendent Odyssey");
+		naziviDokumenata.add("Pensive Mirage");
+		naziviDokumenata.add("Celestial Alchemy");
+		naziviDokumenata.add("Whimsical Paradox");
+		naziviDokumenata.add("Ethereal Cascade");
+		naziviDokumenata.add("Ineffable Sanctuary");
+		naziviDokumenata.add("Mystical Ember");
+		naziviDokumenata.add("Harmonious Zenith");
+		naziviDokumenata.add("Jubilant Enigma");
+		naziviDokumenata.add("Melancholic Overture");
+		naziviDokumenata.add("Radiant Epiphany");
+		naziviDokumenata.add("Enchanting Reverie");
+
+		return naziviDokumenata.get(rng.nextInt(0, naziviDokumenata.size())) + " " + (i + 1);
+	}
+
+	private static String getNazivPredmeta(int i) {
+		final List<String> naziviPredmeta = new ArrayList<>();
+		naziviPredmeta.add("Matematika");
+		naziviPredmeta.add("Hrvatski");
+		naziviPredmeta.add("Povijest");
+		naziviPredmeta.add("Fizika");
+		naziviPredmeta.add("Engleski");
+		naziviPredmeta.add("Biologija");
+		naziviPredmeta.add("Kemija");
+		naziviPredmeta.add("Likovno");
+		naziviPredmeta.add("TZK");
+		naziviPredmeta.add("Geografija");
+		naziviPredmeta.add("Informatika");
+		naziviPredmeta.add("Glazbeno");
+		naziviPredmeta.add("Psihologija");
+		naziviPredmeta.add("Filozofija");
+		naziviPredmeta.add("Sociologija");
+
+		return naziviPredmeta.get(rng.nextInt(0, naziviPredmeta.size())) + " " + (i + 1);
+	}
+
+	private static String getNazivAutora(int i) {
+		final List<String> naziviAutora = new ArrayList<>();
+		naziviAutora.add("Ana Anić");
+		naziviAutora.add("Marko Marković");
+		naziviAutora.add("Ivana Ivić");
+		naziviAutora.add("Tomislav Tomić");
+		naziviAutora.add("Marija Marić");
+		naziviAutora.add("Luka Lukić");
+		naziviAutora.add("Petra Petrić");
+		naziviAutora.add("Nikola Nikolić");
+		naziviAutora.add("Kristina Križanić");
+		naziviAutora.add("Josip Josić");
+		naziviAutora.add("Antonija Antonić");
+		naziviAutora.add("Ivan Ivančić");
+		naziviAutora.add("Jelena Jelić");
+		naziviAutora.add("Stjepan Stipić");
+		naziviAutora.add("Maja Majkić");
+
+		return naziviAutora.get(rng.nextInt(0, naziviAutora.size()));
+	}
+
+	private static String getNazivJezika(int i) {
+		final List<String> naziviJezika = new ArrayList<>();
+		naziviJezika.add("Hrvatski");
+		naziviJezika.add("Engleski");
+		naziviJezika.add("Španjolski");
+		naziviJezika.add("Kineski (Mandarinski)");
+		naziviJezika.add("Francuski");
+		naziviJezika.add("Ruski");
+
+		return naziviJezika.get(rng.nextInt(0, naziviJezika.size()));
+	}
+
+	private static String getNazivKategorijeSadrzaja(int i) {
+		final List<String> naziviKategorijaSadrzaja = new ArrayList<>();
+		naziviKategorijaSadrzaja.add("Akcija");
+		naziviKategorijaSadrzaja.add("Komedija");
+		naziviKategorijaSadrzaja.add("Drama");
+		naziviKategorijaSadrzaja.add("Horor");
+		naziviKategorijaSadrzaja.add("Znanstvena fantastika");
+		naziviKategorijaSadrzaja.add("Romantika");
+		naziviKategorijaSadrzaja.add("Triler");
+
+		return naziviKategorijaSadrzaja.get(rng.nextInt(0, naziviKategorijaSadrzaja.size()));
 	}
 }
