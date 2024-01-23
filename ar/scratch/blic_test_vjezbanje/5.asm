@@ -13,7 +13,7 @@ petlja:
 
 	CMP r2, #0
 	BEQ stop
-	
+
 	ADD r1, r1, #1
 
 	AND r1, #1
