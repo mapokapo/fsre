@@ -50,11 +50,6 @@ class Kugla extends GeometrijskoTijelo {
 	public Kugla(double volumen, double oplosje) {
 		super(volumen, oplosje);
 	}
-
-	@Override
-	public String toString() {
-		return String.format("Kugla = %s", super.toString());
-	}
 }
 
 class Kvadar extends GeometrijskoTijelo {

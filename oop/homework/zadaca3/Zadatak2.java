@@ -79,7 +79,7 @@ class Satelit extends NebeskoTijelo {
 
 	@Override
 	public String toString() {
-		return String.format("Satelit: {%n\tNaziv = %s%n\tBrzina Oko Osi = %.2f,%n\tBrzina Oko Sunca = %.2f%n}",
+		return String.format("Satelit: {%n\tNaziv = %s%n\tBrzina Oko Osi = %.2f,%n\tBrzina Oko Zemlje = %.2f%n}",
 				this.Naziv, this.getBrzinaOkoOsi(), this.getBrzinaOkoSunca());
 	}
 }
