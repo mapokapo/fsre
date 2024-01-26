@@ -16,13 +16,13 @@ import java.util.Random;
 
 // Definirati sucenje Dokument koje sadrži metodu dajPeriodPosudbe().
 interface Dokument {
-	public void dajPeriodPosudbe();
+	public int dajPeriodPosudbe();
 }
 
 // Definirati abstraktni razred DokumentKnjiznice koji implementira sučelje
 // Dokument.
-abstract class DokumentKnjiznice {
-	// Razred DokumentKnjiznice ima podatkovne članove ID (cijeli broj) i
+abstract class DokumentKnjiznice implements Dokument {
+	// Abstraktni razred DokumentKnjiznice ima podatkovne članove ID (cijeli broj) i
 	// nazivDokumenta (tekstualni podatak).
 	private int ID;
 	private String nazivDokumenta;
@@ -48,7 +48,8 @@ abstract class DokumentKnjiznice {
 		this.nazivDokumenta = nazivDokumenta;
 	}
 
-	// Razred DokumentKnjiznice sadrži metodu dajPeriodPosudbe() bez parametara koja
+	// Abstraktni razred DokumentKnjiznice sadrži metodu dajPeriodPosudbe() bez
+	// parametara koja
 	// za objekte različitih izvedenih razreda vraća različite cjelobrojne
 	// vrijednosti (za knjige je period posudbe 14 dana, osim za udžbenike za koje
 	// je 120 dana, za časopise 7 dana, a za digitalne i e-dokumente 30 dana).
@@ -68,12 +69,14 @@ abstract class DokumentKnjiznice {
 		}
 	}
 
-	// Razred DokumentKnjiznice sadrži apstraktnu metodu jeLiPotrebanPolog() (koja
+	// Abstraktni razred DokumentKnjiznice sadrži apstraktnu metodu
+	// jeLiPotrebanPolog() (koja
 	// vraća logičku vrijednost true za udžbenike i digitalne sadržaje, odnosno
 	// vrijednost false).
 	public abstract boolean jeLiPotrebanPolog();
 
-	// Razred DokumentKnjiznice sadrži apstraktnu metodu dajIznosPologa() koji vraća
+	// Abstraktni razred DokumentKnjiznice sadrži apstraktnu metodu dajIznosPologa()
+	// koji vraća
 	// različite (proizvoljne) vrijednosti za sve vrste dokumena.
 	public abstract double dajIznosPologa();
 

@@ -144,7 +144,7 @@ class PrijenosnoRacunalno extends Racunalo {
 	public PrijenosnoRacunalno(
 			String proizvodjac,
 			String model,
-			String os, int kapacitetBaterije, double tezina) {
+			String os, int kapacitetBaterije, double tezina) throws IllegalArgumentException {
 		super(proizvodjac, model, os);
 
 		if (kapacitetBaterije < 0) {
