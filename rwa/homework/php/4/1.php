@@ -1,43 +1,56 @@
 <?php
-// klasa koja opisuje koncept studenta i 2 atributa (public private protected)
 
-class Ispit {
+/*
+    Leo Petrović - 2174/RR
+*/
+
+// Zadatak 1. - Kreirajte klasu proizvoljnog naziva s nekoliko atributa razlicite vidljivosti, te nekoliko metoda putem kojih cete prikazati vidljivost atributa (metode rade jednostavne zadatke, ispis, ispis dvaj atributa spojeno (getfullname i sl) i sl)
+
+class Ispit
+{
     private int $ocjena;
-    
-    public function __construct(int $ocjena) {
+
+    public function __construct(int $ocjena)
+    {
         $this->ocjena = $ocjena;
     }
-    
-    public function getOcjena() {
+
+    public function getOcjena()
+    {
         return $this->ocjena;
     }
-    
 }
 
-class Student {
+class Student
+{
     public String $imePrezime;
     protected String $tip = "Redovan";
     private int $brojPolozenihIspita = 0;
-    
-    public function __construct($imePrezime) {
+
+    public function __construct($imePrezime)
+    {
         $this->imePrezime = $imePrezime;
     }
-    
-    public function dodajIspit($ispit) {
+
+    public function dodajIspit($ispit)
+    {
         if ($ispit->getOcjena() >= 2) {
             $this->brojPolozenihIspita += 1;
         }
     }
-    
-    public function dobijBrojPolozenihIspita() {
+
+    public function dobijBrojPolozenihIspita()
+    {
         return $this->brojPolozenihIspita;
     }
 }
 
-class IzvanredanStudent extends Student {
-    public function __construct($imePrezime) {
+class IzvanredanStudent extends Student
+{
+    public function __construct($imePrezime)
+    {
         parent::__construct($imePrezime);
-        
+
         $this->tip = "Izvanredan";
     }
 }
@@ -55,4 +68,3 @@ $s2->dodajIspit($i2);
 
 var_dump($s1);
 var_dump($s2);
-?>

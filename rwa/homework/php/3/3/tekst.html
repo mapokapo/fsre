@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tekst</title>
+  </head>
+  <body>
+    <h1>Zadatak kolokvij</h1>
+
+    <form
+      action="tekst.php"
+      method="get"
+      style="
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        gap: 2px;
+      "
+    >
+      <label for="tekst">
+        Unesite tekst
+        <input type="text" name="tekst" id="tekst" />
+      </label>
+      <label for="broj">
+        Unesite broj
+        <input type="number" name="broj" id="broj" />
+      </label>
+      <button type="submit">Pokreni</button>
+    </form>
+  </body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Forma</title>
+  </head>
+  <body>
+    <h1>KALKUATOR</h1>
+
+    <form
+      action="program.php"
+      method="get"
+      style="
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        gap: 2px;
+      "
+    >
+      <label for="broj">
+        Broj
+        <input type="number" name="broj" id="broj" />
+      </label>
+      <label for="operacija">
+        <input type="radio" name="operacija" id="operacija" value="KVADRAT" />
+        KVADRAT BROJA
+      </label>
+      <label for="operacija">
+        <input type="radio" name="operacija" id="operacija" value="KUB" />
+        KUB BROJA
+      </label>
+      <button type="submit">POSALJI</button>
+    </form>
+  </body>
+</html>

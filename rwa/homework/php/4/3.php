@@ -1,4 +1,11 @@
 <?php
+
+/*
+	Leo Petrović - 2174/RR
+*/
+
+// Zadatak 3. - Deklarirati objekt "person" koja ce imati svojstva ime, prezime, i masa u kg.  Deklarirati i metodu koja ce racunati kolika je tezina te osobe u kg (u pozivu i ispisite u browser). Zatim deklarirati metodu koja će računati koliku tezinu ta osoba ima na Mjesecu. Inicijalizirati nekoliko razlicitih osoba.
+
 class Person
 {
 	private String $ime;
