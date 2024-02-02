@@ -192,7 +192,7 @@ class KeypadPanel extends JPanel {
 		double secondOperandInt = Double.parseDouble(this.secondOperand);
 
 		double resultInt = 0;
-		String result;
+		String result = null;
 
 		switch (this.operator) {
 			case "+":
@@ -206,7 +206,7 @@ class KeypadPanel extends JPanel {
 				break;
 			case "/":
 				if (secondOperandInt == 0) {
-					result = "Nije moguće dijeliti s nulom";
+					result = "ERROR";
 					break;
 				}
 				resultInt = firstOperandInt / secondOperandInt;
@@ -215,7 +215,7 @@ class KeypadPanel extends JPanel {
 				break;
 		}
 
-		result = String.valueOf(resultInt);
+		result = result == null ? String.valueOf(resultInt) : result;
 
 		return result;
 	}
