@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="hr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="generator" content="pandoc" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=yes"
+    />
+    <title>Teorija informacije</title>
+    <style>
+      html {
+        color: #fefefe;
+        background-color: #0a0a0a;
+      }
+      body {
+        margin: 0 auto;
+        max-width: 60em;
+        padding-left: 50px;
+        padding-right: 50px;
+        padding-top: 50px;
+        padding-bottom: 50px;
+        hyphens: auto;
+        overflow-wrap: break-word;
+        text-rendering: optimizeLegibility;
+        font-kerning: normal;
+        font-size: 1.2rem;
+      }
+      @media (max-width: 600px) {
+        body {
+          font-size: 0.9em;
+          padding: 12px;
+        }
+        h1 {
+          font-size: 1.8em;
+        }
+      }
+      @media print {
+        html {
+          background-color: white;
+        }
+        body {
+          background-color: transparent;
+          color: black;
+          font-size: 12pt;
+        }
+        p,
+        h2,
+        h3 {
+          orphans: 3;
+          widows: 3;
+        }
+        h2,
+        h3,
+        h4 {
+          page-break-after: avoid;
+        }
+      }
+      p {
+        margin: 1em 0;
+      }
+      a {
+        color: #fdfdfd;
+      }
+      a:visited {
+        color: #fdfdfd;
+      }
+      img {
+        max-width: 100%;
+      }
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        margin-top: 1.4em;
+      }
+      h5,
+      h6 {
+        font-size: 1em;
+        font-style: italic;
+      }
+      h6 {
+        font-weight: normal;
+      }
+      ol,
+      ul {
+        padding-left: 1.7em;
+        margin-top: 1em;
+      }
+      li > ol,
+      li > ul {
+        margin-top: 0;
+      }
+      blockquote {
+        margin: 1em 0 1em 1.7em;
+        padding-left: 1em;
+        border-left: 2px solid #e6e6e6;
+        color: #606060;
+      }
+      code {
+        font-family: Menlo, Monaco, Consolas, "Lucida Console", monospace;
+        font-size: 85%;
+        margin: 0;
+        hyphens: manual;
+        white-space: pre-wrap;
+      }
+      pre {
+        margin: 1em 0;
+        overflow: auto;
+      }
+      pre code {
+        padding: 0;
+        overflow: visible;
+        overflow-wrap: normal;
+      }
+      .sourceCode {
+        background-color: transparent;
+        overflow: visible;
+      }
+      hr {
+        background-color: #1a1a1a;
+        border: none;
+        height: 1px;
+        margin: 1em 0;
+      }
+      table {
+        margin: 1em 0;
+        border-collapse: collapse;
+        width: 100%;
+        overflow-x: auto;
+        display: block;
+        font-variant-numeric: lining-nums tabular-nums;
+      }
+      table caption {
+        margin-bottom: 0.75em;
+      }
+      tbody {
+        margin-top: 0.5em;
+        border-top: 1px solid #1a1a1a;
+        border-bottom: 1px solid #1a1a1a;
+      }
+      th {
+        border-top: 1px solid #1a1a1a;
+        padding: 0.25em 0.5em 0.25em 0.5em;
+      }
+      td {
+        padding: 0.125em 0.5em 0.25em 0.5em;
+      }
+      header {
+        margin-bottom: 4em;
+        text-align: center;
+      }
+      #TOC li {
+        list-style: none;
+      }
+      #TOC ul {
+        padding-left: 1.3em;
+      }
+      #TOC > ul {
+        padding-left: 0;
+      }
+      #TOC a:not(:hover) {
+        text-decoration: none;
+      }
+      span.smallcaps {
+        font-variant: small-caps;
+      }
+      div.columns {
+        display: flex;
+        gap: min(4vw, 1.5em);
+      }
+      div.column {
+        flex: auto;
+        overflow-x: auto;
+      }
+      div.hanging-indent {
+        margin-left: 1.5em;
+        text-indent: -1.5em;
+      }
+      /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+      ul.task-list[class] {
+        list-style: none;
+      }
+      ul.task-list li input[type="checkbox"] {
+        font-size: inherit;
+        width: 0.8em;
+        margin: 0 0.8em 0.2em -1.6em;
+        vertical-align: middle;
+      }
+    </style>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+      type="text/javascript"
+    ></script>
+    <!--[if lt IE 9]>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <nav id="TOC" role="doc-toc">
+      <ul>
+        <li>
+          <a href="#teorija-informacije" id="toc-teorija-informacije"
+            >Teorija Informacije</a
+          >
+          <ul>
+            <li>
+              <a href="#prezentacija-1" id="toc-prezentacija-1"
+                >Prezentacija 1</a
+              >
+              <ul>
+                <li>
+                  <a href="#definicija" id="toc-definicija">Definicija</a>
+                </li>
+                <li>
+                  <a
+                    href="#podatci-i-informacija"
+                    id="toc-podatci-i-informacija"
+                    >Podatci i informacija</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="#razlicita-poimanja-teorije-informacije"
+                    id="toc-razlicita-poimanja-teorije-informacije"
+                    >Razlicita poimanja teorije informacije</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="#komunikacijski-sustav"
+                    id="toc-komunikacijski-sustav"
+                    >Komunikacijski sustav</a
+                  >
+                </li>
+                <li>
+                  <a href="#zastitno-kodiranje" id="toc-zastitno-kodiranje"
+                    >Zastitno kodiranje</a
+                  >
+                </li>
+                <li>
+                  <a href="#paritetno-kodiranje" id="toc-paritetno-kodiranje"
+                    >Paritetno kodiranje</a
+                  >
+                </li>
+                <li>
+                  <a href="#krizni-paritet" id="toc-krizni-paritet"
+                    >Krizni paritet</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#prezentacija-2" id="toc-prezentacija-2"
+                >Prezentacija 2</a
+              >
+              <ul>
+                <li>
+                  <a
+                    href="#kolicina-informacije-i-entropija"
+                    id="toc-kolicina-informacije-i-entropija"
+                    >Kolicina informacije i entropija</a
+                  >
+                </li>
+                <li><a href="#entropija" id="toc-entropija">Entropija</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#prezentacija-3" id="toc-prezentacija-3"
+                >Prezentacija 3</a
+              >
+              <ul>
+                <li>
+                  <a
+                    href="#prenesena-kolicina-informacije"
+                    id="toc-prenesena-kolicina-informacije"
+                    >Prenesena kolicina informacije</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#prezentacija-4" id="toc-prezentacija-4"
+                >Prezentacija 4</a
+              >
+            </li>
+            <li>
+              <a href="#entropijsko-kodiranje" id="toc-entropijsko-kodiranje"
+                >Entropijsko kodiranje</a
+              >
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+    <h1 id="teorija-informacije">Teorija Informacije</h1>
+    <h2 id="prezentacija-1">Prezentacija 1</h2>
+    <h3 id="definicija">Definicija</h3>
+    <ul>
+      <li>
+        <p>
+          Teorija informacije je matematička teorija, temeljena na statistici i
+          teoriji vjerojatnosti koja se bavi komunikacijom na sto brzi i tocniji
+          nacin uz minimalnu potrosnju energije i gubitak podataka. Zadatci su
+          joj:
+        </p>
+        <ul>
+          <li>Stvaranje modela komunikacijskog sustava</li>
+          <li>
+            Racuna mjeru informacije (koliko informacije u prosjeku sadrzi svaki
+            simbol poruke)
+          </li>
+          <li>
+            Racuna broj simbola potreban za prijenos poruke bez gubitka
+            informacije (granica kompresije bez gubitka)
+          </li>
+          <li>
+            Racuna granice kolicine informacije koja se moze prenijeti
+            komunikacijskim kanalom u jedinici vremena (kapacitet kanala)
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <h3 id="podatci-i-informacija">Podatci i informacija</h3>
+    <ul>
+      <li>
+        <p>
+          Podatak je neobradjeni/neorganizirani materijal bez znacenja (slovo,
+          broj, itd.), dok je informacija skup obradjenih podataka koji ima
+          znacenje (ime, cijena, itd.).
+        </p>
+      </li>
+      <li>
+        <p>Postoje 3 obiljezja informacije:</p>
+        <ol type="1">
+          <li>
+            Sintakticko - pokazuje oblik poruke (odnosi izmedju simbola koji
+            cine poruku)
+          </li>
+          <li>Semanticko - pokazuje znacenje poruke</li>
+          <li>Pragmaticko - pokazuje svrhu (vaznost, relevantnost…) poruke</li>
+        </ol>
+        <p>
+          Sintakticko obiljezje uglavnom razmatra oblik/format informacije, dok
+          semanticko i pragmaticko obiljezje su vezane uz sami sadrzaj.
+        </p>
+      </li>
+    </ul>
+    <h3 id="razlicita-poimanja-teorije-informacije">
+      Razlicita poimanja teorije informacije
+    </h3>
+    <ul>
+      <li>
+        Postoje 2 razlicita poimanja teorije informacije:
+        <ol type="1">
+          <li>
+            Britanski pristup - istrazuje pragmaticko i semanticko obiljezje
+            informacije (znacnje i vaznost)
+          </li>
+          <li>
+            Americki pristup - istrazuje sintakticko obiljezje informacije
+            (oblik i format).
+          </li>
+        </ol>
+      </li>
+    </ul>
+    <h3 id="komunikacijski-sustav">Komunikacijski sustav</h3>
+    <ul>
+      <li>
+        <p>
+          Komunikacija je razmjena informacija, a teorija informacije postavlja
+          model komunikacijskog sustava (nacin na koji se komunicira). Postoje 3
+          faze komunikacije:
+        </p>
+        <ol type="1">
+          <li>Kodiranje</li>
+          <li>Prijenos</li>
+          <li>Dekodiranje</li>
+        </ol>
+        <p>
+          Vazno je da je informacija upucena tocnom primatelju i u formatu koji
+          on moze razumjeti.
+        </p>
+        <p>
+          Komunikacija se apstraktnije moze definirati kao: reproduciranje
+          poruke na jednoj tocki (odrediste) koja je odabrana na nekoj drugoj
+          tocki (izvor).
+        </p>
+        <p>Vazni pojmovi vezani za komunikaciju su:</p>
+        <ul>
+          <li>Posiljatelj (izvor)</li>
+          <li>Primatelj (odrediste)</li>
+          <li>Kod</li>
+          <li>Kanal</li>
+          <li>Poruka</li>
+          <li>Kontekst</li>
+        </ul>
+        <p>
+          Komunikacijski sustav je cjelokupni sustav prijenosa poruke. To
+          ukljucuje pretvaranje poruke u signal (sa strane posiljatelja) i
+          pretvaranje signala u poruku (sa strane primatelja). Glavna zadaca
+          komunikacijskog sustava je prenos informacija od izvora do odredista.
+          Komunikacijski sustavi se mogu podijeliti po broju sudionika (jedan na
+          jedan, jedan na vise, vise na jedan, vise na vise) i po nacinu
+          prijenosa (jednosmjerni, dvosmjerni).
+        </p>
+      </li>
+    </ul>
+    <h3 id="zastitno-kodiranje">Zastitno kodiranje</h3>
+    <ul>
+      <li>
+        <p>
+          Hammingovo rastojanje je mjera pogresnosti poruke, tocnije to je broj
+          bitova u kojima se razlikuju dvije poruke. Npr. za poruke 1010 i 1001,
+          minimalna Hammingova udaljenost je 2 (potrebne su minimalno 2 promjene
+          da bi se jedna poruka pretvorila u drugu).
+        </p>
+      </li>
+      <li>
+        <p>
+          <strong>Tezina kodne rijeci</strong> - broj jedinica u kodnoj rijeci.
+          Npr. za 1010, tezina je 2.
+        </p>
+      </li>
+    </ul>
+    <h3 id="paritetno-kodiranje">Paritetno kodiranje</h3>
+    <ul>
+      <li>
+        Koristi se iskljucivo za otkrivanje gresaka u kodnoj rijeci, a ne i za
+        popravljanje tih gresaka.
+      </li>
+      <li>
+        Postupak: na poruku se dodaje jedan dodatni bit koji se naziva paritetni
+        bit. Taj bit moze predstavljati parni ili neparni paritet - ako se
+        ispravnom porukom smatra ona koja ima paran broj jedinica, to je parni
+        paritet, i obratno. Paritetni bit ce se postaviti tako da ta poruka ima
+        broj jedinica koji odgovara zadanom paritetu.
+      </li>
+    </ul>
+    <h3 id="krizni-paritet">Krizni paritet</h3>
+    <ul>
+      <li>Koristi se za otkrivanje i popravljanje gresaka u kodnoj rijeci.</li>
+      <li>
+        Postupak: za svaki redak matrice kodne rijeci se izracuna paritet, te se
+        doda na kraj tog retka. Isti postupak se ponovi i za stupce. Na kraju
+        ostane prazno polje u donjem desnom kutu, koje se popuni tako da se
+        izracuna paritet svih bitova u matrici. Na ovaj nacin se moze tocno
+        odrediti koji bit je pogresan te se moze popraviti.
+      </li>
+    </ul>
+    <h2 id="prezentacija-2">Prezentacija 2</h2>
+    <h3 id="kolicina-informacije-i-entropija">
+      Kolicina informacije i entropija
+    </h3>
+    <ul>
+      <li>
+        <p>
+          Neke poruke sadrze vecu kolicinu informacije nego druge, a mjera
+          <strong>kolicine informacije</strong> mjeri koliko informacije se
+          sadrzi u poruci.
+        </p>
+        <p>
+          Pravilo je da je kolicina informacije neke poruke obrnuto
+          proporcionalna vjerojatnosti te poruke.
+        </p>
+        <p>
+          Npr. ako nam netko kaze da je nebo plavo, ta poruka nema veliku
+          kolicinu informacije jer je vjerojatnost da je nebo plavo vrlo velika,
+          ali ako kazu da je nebo zuto, to nosi veliku kolicinu informacije jer
+          je vjerojatnost da je nebo zuto vrlo mala.
+        </p>
+        <p>
+          Mjera kolicine informacije se takodjer naziva i
+          <strong>neodredjenost</strong>, a moze se izracunati formulom:
+          <span class="math inline">\(I(x)=-log_2p(x)\)</span>, gdje je
+          <span class="math inline">\(p(x)\)</span> vjerojatnost poruke x.
+          Koristi se logaritam baze 2 jer je korisno informaciju mjeriti u
+          bitovima. Zbog toga kolicina informacije takodjer ne moze biti
+          negativna.
+        </p>
+        <p>
+          Mjera kolicine informacije je vazna za kodiranje informacija kroz
+          komunikacijski kanal.
+        </p>
+        <p>
+          <strong>Vazno:</strong> zdruzena vjerojatnost pojavljivanja nekih
+          dviju poruka je jednaka umnozku njihovih pojedinacnih vjerojatnosti:
+          <span class="math inline">\(p(x,y) = p(x) \cdot p(y)\)</span> samo ako
+          su te dvije poruke nezavisne.
+        </p>
+      </li>
+    </ul>
+    <h3 id="entropija">Entropija</h3>
+    <ul>
+      <li>
+        <p>
+          Entropija je srednja vrijednost kolicine informacije koja prolazi
+          tockom izvora u komunikacijskom sustavu.
+        </p>
+        <p>
+          Ona je korisna jer se u komunikacijskim sustavima inace prenosi duzi
+          niz simbola, pa je lakse izracunati srednju vrijednost za sviju njih
+          umjesto koristenja pojedinacnih vrijednosti. Ona je brojcano jednaka:
+          <span class="math inline"
+            >\(H(x) = -\sum_{i=1}^{n}p(x_i) \cdot log_2p(x_i)\)</span
+          >, gdje je <span class="math inline">\(p(x_i)\)</span> vjerojatnost
+          pojedinog simbola.
+        </p>
+        <p>
+          Ako su sve poruke na izvoru jednako vjerojatne, entropija je
+          maksimalna. Brojcano to je jednako:
+          <span class="math inline">\(H_{max}(x) = log_2n\)</span>, gdje je n
+          broj simbola.
+        </p>
+        <p>Dodatne formule:</p>
+        <ul>
+          <li>
+            redundancija:
+            <span class="math inline"
+              >\(red = 1 - \frac{H(x)}{H_{max}(x)}\)</span
+            >
+          </li>
+          <li>
+            brzina prijenosa informacija:
+            <span class="math inline">\(R = r \cdot H\)</span>, r je brzina
+            poruka
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <h2 id="prezentacija-3">Prezentacija 3</h2>
+    <h3 id="prenesena-kolicina-informacije">Prenesena kolicina informacije</h3>
+    <ul>
+      <li><p>To je mjera povezanosti/ovisnosti dogadjaja X i Y</p></li>
+      <li>
+        <p>
+          Odredjuje koliko informacije mozemo dobiti o jednom dogadjaju ako
+          znamo da se drugi dogadjaj dogodio. Formula je:
+          <span class="math inline"
+            >\(I(x;y)=\sum_{i=1}^N\sum_{j=1}^Mp(x_i,y_j) \cdot
+            log_2\frac{p(x_i,y_j)}{p(x_i)p(y_j)}\)</span
+          >, gdje je p(x,y) zajednicka vjerojatnost pojavljivanja dogadjaja x i
+          y.
+        </p>
+        <p>
+          Ova formula mjeri koliko je informacija zajednickih za oba dogadjaja u
+          usporedbi sa informacijom koju bi dobili da ih promatramo zasebno. Ako
+          su X i Y nezavisni, onda je
+          <span class="math inline">\(I(x;y)=0\)</span>.
+        </p>
+        <ul>
+          <li>
+            H(X) - entropija izvora, odnosno mjera neizvjesnosti koji simbol ce
+            biti poslan
+          </li>
+          <li>
+            H(Y) - entropija odredista, odnosno mjera neizvjesnosti koji simbol
+            ce biti primljen
+          </li>
+          <li>
+            H(Y/X) - mjera neizvjesnosti koji ce simbol biti primljen na
+            odredistu ako je poznato koji je simbol poslan
+          </li>
+          <li>
+            H(X/Y) - mjera neizvjesnosti koji je simbol poslan ako je poznato
+            koji je simbol primljen na odredistu
+          </li>
+        </ul>
+        <p>
+          <span class="math inline"
+            >\(I(x;y) = H(X) - H(X/Y) = H(Y) - H(Y/X) = H(X) + H(Y) -
+            H(X,Y)\)</span
+          >
+        </p>
+        <p>
+          Lakse zapamtiti: H(X) su informacije koje su poslane, H(Y) su
+          informacije koje su primljene. I(x;y) su informacije koje su uspjesno
+          poslane i primljene. H(X/Y) su informacije koje su poslane, ali nisu
+          stigle (kanal sa brisanjem), a H(Y/X) su informacije koje su stigle,
+          ali nisu zapravo bile poslane (kanal sa greskom).
+        </p>
+      </li>
+    </ul>
+    <h2 id="prezentacija-4">Prezentacija 4</h2>
+    <h2 id="entropijsko-kodiranje">Entropijsko kodiranje</h2>
+    <ul>
+      <li>
+        To je postupak zapisivanja poruka iz izvora u najoptimalnijem obliku.
+        Tom metodom se dobiju kodovi minimalne duljine koji jednoznacno opisuju
+        poslane poruke. Ideja je da se porukama sa vecom vjerojatnoscu dodijele
+        krace kodne rijeci.
+      </li>
+      <li>
+        Efikasnost koda:
+        <span class="math inline">\(\eta = \frac{H(x)}{L\cdot log_2r}\)</span>,
+        gdje je L prosjecna ponderirana duljina kodne rijeci, a r duljina kodne
+        abecede.
+      </li>
+    </ul>
+  </body>
+</html>
