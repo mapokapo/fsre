@@ -1,0 +1,10 @@
+{
+  "files.associations": {
+    "*.svelte": "html",
+    "*.dart": "dart",
+    "**/templates/**/*.html": "django-html",
+    "**/templates/**/*": "django-txt",
+    "stdio.h": "c",
+    "signal.h": "c"
+  }
+}
