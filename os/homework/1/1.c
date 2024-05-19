@@ -1,8 +1,10 @@
+// Ovo je zbog nekog razloga potrebno da bi koristili funkciju sigaction.
 #define _XOPEN_SOURCE 700
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
+#include <time.h>
+#include <errno.h>
 #include <signal.h>
 #include <math.h>
 
@@ -18,19 +20,23 @@
 	- Na SIGINT samo prekinuti s radom, čime će u status.txt ostati nula (čak se taj signal niti ne mora maskirati – prekid je pretpostavljeno ponašanje!). To će uzrokovati da iduće pokretanje detektira prekid – nula u status.txt, te će za nastavak rada, tj. Određivanje idućeg broja morati „analizirati“ datoteku obrada.txt i od tamo zaključiti kako nastaviti (pročitati zadnji broj i izračunati korijen). Operacije s datotekama, radi jednostavnosti, uvijek mogu biti u nizu open+fscanf/fprintf+close, tj. ne držati datoteke otvorenima da se izbjegnu neki drugi problemi. Ali ne mora se tako. U obradu dodati odgodu (npr. sleep(5)) da se uspori izvođenje.
 */
 
+// Globalne varijable
 int broj;
 const char obrada_dat_naziv[] = "obrada.txt";
 const char status_dat_naziv[] = "status.txt";
 
+// Ova funkcija se poziva kada se dogodi signal. Trenutno slusamo samo signale SIGUSR1 i SIGTERM.
 void obradi_signal(int sig)
 {
 	FILE *status_dat;
 
 	switch (sig)
 	{
+	// Ako je signal SIGUSR1, onda ispisemo trenutni broj.
 	case SIGUSR1:
 		printf("Trenutni broj: %d\n", broj);
 		break;
+	// Ako je signal SIGTERM, onda prvo zapisemo trenutni broj u status datoteku kako bi program mogao nastaviti gdje je zadnje stao kada se ponovno pokrene, zatim zavrsimo program.
 	case SIGTERM:
 		status_dat = fopen(status_dat_naziv, "w");
 
@@ -54,6 +60,7 @@ void obradi_signal(int sig)
 	}
 }
 
+// Ova funkcija obraduje posao. U ovom slucaju to je samo kvadriranje trenutnog broja i zapisivanje u datoteku obrade, no dodajemo lazni sleep kako bi simulirali dugotrajan posao.
 void obradi_posao(FILE *obrada_dat)
 {
 	// Obrada posla (u ovom slucaju to je samo kvadriranje broja).
@@ -61,6 +68,14 @@ void obradi_posao(FILE *obrada_dat)
 
 	// Osiguraj da se promjene zapisu u datoteku.
 	fflush(obrada_dat);
+
+	// Spavaj 1 sekundu. Na ovaj nacin simuliramo neki zahtjevan/dugotrajan posao.
+	// Potrebno je koristiti nanosleep (umjesto sleep) i ovu posebnu provjeru pomocu errno i EINTR jer osim signala SIGALARM, signal SIGUSR1 takodjer moze prekinuti sleep poziv prije nego sto jedna sekunda prodje, sto ne zelimo jer zelimo da se obrada izvrsi samo tocno jednom svake sekunde.
+	struct timespec req = {1, 0}, rem;
+	while (nanosleep(&req, &rem) == -1 && errno == EINTR)
+	{
+		req = rem;
+	}
 }
 
 // Ova funkcija analizira datoteku obrade i vraca zadnji broj iz nje. Koristi se u slucaju da status datoteka nije uspjesno procitana.
@@ -178,6 +193,7 @@ int main()
 	FILE *obrada_dat;
 	FILE *status_dat;
 
+	// Pokusamo procitati broj iz datoteke status.txt, odnosno obrada.txt ako to ne uspije. Ako ni to ne uspije, onda se broj postavlja na pocetnu vrijednost (1). Broj je globalna varijabla.
 	procitaj_broj(status_dat, obrada_dat);
 
 	// Ako statusni broj nije pocetna vrijednost (1), onda obrađujemo sljedeci broj. Razlog zasto ovo radimo je da se broj unutar datoteke obrade ne bi duplicirao prilikom nastavljanja obrade. (npr. ako smo prekinuli program dok je status bio broj 5, onda broj 25 vec postoji u datoteci obrade, pa bi se broj 25 duplicirao ako bi nastavili obradu od statusnog broja 5).
@@ -207,29 +223,21 @@ int main()
 	fprintf(status_dat, "%d", 0);
 	fflush(status_dat);
 
-	// Maskiranje signala.
-	struct sigaction obradi_signal_struktura = {0};
-	obradi_signal_struktura.sa_handler = obradi_signal;
-	sigemptyset(&obradi_signal_struktura.sa_mask);
+	// Maskiranje signala. Koristimo sigaction umjesto signal jer je signal zastario. Za sigaction moramo definirati strukturu sigaction kako bi ga koristili.
+	struct sigaction obradi_signal_action = {0};
+	obradi_signal_action.sa_handler = obradi_signal;
+	sigemptyset(&obradi_signal_action.sa_mask);
 
-	sigaction(SIGUSR1, &obradi_signal_struktura, NULL);
-	sigaction(SIGTERM, &obradi_signal_struktura, NULL);
-
-	sigset_t mask, oldmask;
-	sigemptyset(&mask);
-	sigaddset(&mask, SIGUSR1);
+	// Maskiramo signale SIGUSR1 i SIGTERM. Kada program primi ove signale, pozvat ce se funkcija obradi_signal. Ta funkcija ce takodjer kao argument primiti signal koji je program primio.
+	sigaction(SIGUSR1, &obradi_signal_action, NULL);
+	sigaction(SIGTERM, &obradi_signal_action, NULL);
 
 	// Dugotrajni proces.
 	while (1)
 	{
 		obradi_posao(obrada_dat);
-		broj++;
 
-		// Ovaj kod je potreban kako signal SIGUSR1 ne bi prekinuo lazno kasnjenje ubaceno putem sleep(1).
-		// sleep(1) u svojoj implementaciji kombinira funkcije pause() i alarm(). sleep(1) prvo postavi tajmer (za jednu sekundu) putem funkcije alarm(1), koji ce prilikom isteka vremena poslati signal SIGALARM istom procesu koji ga je pozvao (C program). Sve dok se signal SIGALARM ne primi, sleep ce potpuno pauzirati program putem funkcije hold(). Medjutim, sleep zapravo slusa _bilo koji_ signal, ne samo SIGALARM. Ako se signal poput SIGUSR1 pojavi, sleep se takodjer prekida i vraca se izvrsavanje programa kao i da je istekla 1 sekunda. Putem sigprocmask mozemo ignorirati signal SIGUSR1 dok se sleep izvrsava. Nedostatak ovoga je da program moze obraditi signal SIGUSR1 samo jednom u sekundi (umjesto da se obradi cim je poslan), ali to je prihvatljivo u ovom slucaju.
-		sigprocmask(SIG_BLOCK, &mask, &oldmask);
-		sleep(1);
-		sigprocmask(SIG_UNBLOCK, &mask, NULL);
+		broj++;
 	}
 
 	fclose(obrada_dat);
