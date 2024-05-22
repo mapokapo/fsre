@@ -106,7 +106,7 @@ void *proc(int i)
 
 int main()
 {
-	SHMID = shmget(IPC_PRIVATE, sizeof(int) * 4, 0600); // stvori zajednicku memoriju - potrebno je zauzeti prostor za 3 varijable (PRAVO, ZASTAVICA[0], ZASTAVICA[1])
+	SHMID = shmget(IPC_PRIVATE, sizeof(int) * 4, 0600); // stvori zajednicku memoriju - potrebno je zauzeti prostor za 4 varijable (suma, PRAVO, ZASTAVICA[0], ZASTAVICA[1])
 
 	if (SHMID == -1)
 	{
@@ -120,10 +120,11 @@ int main()
 	PRAVO = shared_memory + 1;		 // varijabla PRAVO se cita iz prvog polja zajednicke memorije
 	ZASTAVICA = shared_memory + 2; // varijabla ZASTAVICA se cita iz drugog polja zajednicke memorije (ZASTAVICA je pointer, pa se ovdje postavlja na adresu prvog elementa)
 
-	*PRAVO = 0; // inicijaliziraj varijablu PRAVO na 0 - prvi proces ima prednost
+	*suma = 0;
+	*PRAVO = 0; // prvi proces ima prednost
 	for (int i = 0; i < N; i++)
 	{
-		ZASTAVICA[i] = 0; // inicijaliziraj svako polje varijable ZASTAVICA na 0
+		ZASTAVICA[i] = 0;
 	}
 
 	if (fork() == 0)
@@ -138,7 +139,6 @@ int main()
 		exit(0);
 	}
 
-	wait(NULL);
 	wait(NULL);
 
 	shmdt(PRAVO);			// oslobodi zajednicku memoriju
