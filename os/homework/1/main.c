@@ -38,6 +38,7 @@ void obradi_signal(int sig)
 		break;
 	// Ako je signal SIGTERM, onda prvo zapisemo trenutni broj u status datoteku kako bi program mogao nastaviti gdje je zadnje stao kada se ponovno pokrene, zatim zavrsimo program.
 	case SIGTERM:
+		// case SIGINT: // helper da se ne mora process svaki put gasiti putem kill komande
 		status_dat = fopen(status_dat_naziv, "w");
 
 		if (status_dat == NULL)
@@ -231,6 +232,7 @@ int main()
 	// Maskiramo signale SIGUSR1 i SIGTERM. Kada program primi ove signale, pozvat ce se funkcija obradi_signal. Ta funkcija ce takodjer kao argument primiti signal koji je program primio.
 	sigaction(SIGUSR1, &obradi_signal_action, NULL);
 	sigaction(SIGTERM, &obradi_signal_action, NULL);
+	// sigaction(SIGINT, &obradi_signal_action, NULL); // helper da se ne mora process svaki put gasiti putem kill komande
 
 	// Dugotrajni proces.
 	while (1)
