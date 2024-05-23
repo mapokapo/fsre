@@ -126,27 +126,27 @@ int main()
 		ZASTAVICA[i] = 0; // inicijaliziraj svako polje varijable ZASTAVICA na 0
 	}
 
+	// stvaramo 2 podprocesa koji ce izvrsavati funkciju proc. Glavni proces ne radi ista osim sto ceka da podprocesi zavrse putem poziva wait().
+	// ako je rezultat poziva fork() jednaka 0, to znaci da se nalazimo u podprocesu. Oba podprocesa jednostavno odrade funkciju proc() zatim zavrse sami sebe.
 	if (fork() == 0)
 	{
-		proc(0);
+		proc(0); // prvi podproces oznacavamo sa identifikatorom 0
 		exit(0);
 	}
 
 	if (fork() == 0)
 	{
-		proc(1);
+		proc(1); // drugi podproces oznacavamo sa identifikatorom 1
 		exit(0);
 	}
 
-	wait(NULL);
+	// ovo je ono sto glavni proces radi - ceka da podprocesi (napravljeni iznad putem fork()) zavrse.
 	wait(NULL);
 
 	shmdt(PRAVO);			// oslobodi zajednicku memoriju
 	shmdt(ZASTAVICA); // oslobodi zajednicku memoriju
 
 	shmctl(SHMID, IPC_RMID, NULL); // obrisi zajednicku memoriju
-
-	exit(0);
 
 	return 0;
 }
