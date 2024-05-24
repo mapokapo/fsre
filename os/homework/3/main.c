@@ -41,8 +41,8 @@
 #include <unistd.h>
 #include <time.h>
 
-int *ULAZ; // oznacava koja dretva zeli uci u kriticni odsjecak
-int *BROJ; // odrzava redoslijed dretvi koje zele uci u kriticni odsjecak, tako da se postuje FIFO redoslijed
+int *ODABIREM; // oznacava koja dretva zeli uci u kriticni odsjecak
+int *BROJ;		 // odrzava redoslijed dretvi koje zele uci u kriticni odsjecak, tako da se postuje FIFO redoslijed
 
 int broj_dretvi;
 int broj_stolova;
@@ -112,14 +112,14 @@ void sastavi_stanje_string(char *stanje)
 // Lamportov algoritam za međusobno isključivanje - ulazak u kriticni odsjecak. Oznacavamo da dretva "i" zeli obavljati posao, i tijekom tog rada, nijedna druga dretva ne smije uci u kriticni odsjecak.
 void udi_u_kriticni_odsjeckak(int i)
 {
-	ULAZ[i] = 1;													 // označava da dretva "i" želi ući u kritični odsječak.
+	ODABIREM[i] = 1;											 // označava da dretva "i" želi ući u kritični odsječak.
 	BROJ[i] = max(BROJ, broj_stolova) + 1; // određuje redoslijed dretvi koje žele ući u kritični odsječak. Indeks niza je ID broj dretve, a vrijednost na tom indeksu je redoslijed ulaska u kriticni odsječak. Npr. ako je vrijednost 2, to znaci da trenutna dretva treba cekati jos jednu dretvu da se izvrsi prije nego sto moze poceti svoj rad. Svaka nova dretva koja dodje u red dobiva novi broj za 1 veci od prethodne dretve.
-	ULAZ[i] = 0;													 // dretva "i" je vec "usla" u kriticni odsječak (u stvarnosti je samo usla u redoslijed ali to nam je jedino i vazno), pa sada moze pustiti druge dretve da ulaze.
+	ODABIREM[i] = 0;											 // dretva "i" je vec "usla" u kriticni odsječak (u stvarnosti je samo usla u redoslijed ali to nam je jedino i vazno), pa sada moze pustiti druge dretve da ulaze.
 
 	// provjeravamo moze li dretva "i" obavljati posao. Ako ne moze, onda ceka svoj red (putem beskonacne petlje)
 	for (int j = 0; j < broj_stolova - 1; j++)
 	{
-		while (ULAZ[j] != 0) // dok je god neka druga dretva u procesu ulazenja u red cekanja za kriticni odsječak, cekamo.
+		while (ODABIREM[j] != 0) // dok je god neka druga dretva u procesu ulazenja u red cekanja za kriticni odsječak, cekamo.
 		{
 			; // ne radimo nista
 		}
@@ -207,18 +207,18 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	ULAZ = malloc(broj_stolova * sizeof(int));
+	ODABIREM = malloc(broj_stolova * sizeof(int));
 	BROJ = malloc(broj_stolova * sizeof(int));
 	stolovi = malloc(broj_stolova * sizeof(int));
 
-	mecheck(ULAZ); // pomocna funkcija za provjeru alokacije memorije. Vise informacija u komentaru iznad funkcije.
+	mecheck(ODABIREM); // mecheck je pomocna funkcija za provjeru alokacije memorije. Vise informacija u komentaru iznad funkcije.
 	mecheck(BROJ);
 	mecheck(stolovi);
 
 	// inicijalizacija varijabli
 	for (int i = 0; i < broj_stolova; i++)
 	{
-		ULAZ[i] = 0;
+		ODABIREM[i] = 0;
 		BROJ[i] = 0;
 		stolovi[i] = -1;
 	}
@@ -253,7 +253,7 @@ int main(int argc, char *argv[])
 	sastavi_stanje_string(stanje);
 	printf("Stanje: %s\n", stanje);
 
-	free(ULAZ);
+	free(ODABIREM);
 	free(BROJ);
 	free(stolovi);
 	free(stanje);
