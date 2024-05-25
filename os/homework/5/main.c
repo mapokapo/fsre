@@ -66,13 +66,14 @@ struct filozof_podaci
 	struct monitor *m;
 };
 
+// Inicijalizacija monitora tj. mutex-a za sve dretve, te uvjetnih varijabli i stanja monitora za pojedine dretve
 void init_monitor(struct monitor *m)
 {
 	pthread_mutex_init(&m->mutex, NULL);
 	for (int i = 0; i < BROJ_FILOZOFA; i++)
 	{
-		m->stanje[i] = 'O';
-		m->vilice[i] = 1;
+		m->stanje[i] = 'O'; // Svi filozofi na pocetku razmisljaju
+		m->vilice[i] = 1;		// Sve vilice na pocetku su dostupne (na stolu)
 		pthread_cond_init(&m->red[i], NULL);
 	}
 }
@@ -120,17 +121,17 @@ void jedi_i_misli(struct monitor *m, int id)
 {
 	while (1)
 	{
-		misli();
+		misli(); // Cekamo 3 sekunde dok filozof razmislja
 
 		/* START KRITICNI ODSJECAK - JEDENJE */
 		udji_u_kriticni_odsječak(m);
 
 		m->stanje[id] = 'o'; // Filozof čeka na vilice
 
-		while (!m->vilice[id] || !m->vilice[(id + 1) % BROJ_FILOZOFA]) // Ako su vilice zauzete...
+		while (!m->vilice[id] || !m->vilice[(id + 1) % BROJ_FILOZOFA])
 		{
-			pthread_cond_wait(&m->red[id], &m->mutex); // ...cekaj u redu
-																								 // Razlog zasto je ovo while petlja a ne if block je zbog spurious wakeup-a, gdje se dretva moze probuditi bez ikakvog razloga
+			pthread_cond_wait(&m->red[id], &m->mutex); // Cekaj sve dok ne dobijemo signal za dretvu sa ID brojem "id".
+																								 // U slucaju da smo dobili signal, no dretva koja je poslala signal nije postavila stanje na vrijednost koja zadovolja uvjet, onda ce while petlja osigurati da se dretva ne nastavi izvrsavati, te ce ponovno cekati na signal. Na taj nacin smo izbjegli "spurious wakeup".
 		}
 
 		m->vilice[id] = 0;											 // Uzmi lijevu vilicu
@@ -142,14 +143,14 @@ void jedi_i_misli(struct monitor *m, int id)
 		izadji_iz_kriticnog_odsjecka(m);
 		/* END KRITICNI ODSJECAK - JEDENJE */
 
-		jedi();
+		jedi(); // Cekamo 2 sekunde dok filozof jede
 
 		/* START KRITICNI ODSJECAK - MISLJENJE */
 		udji_u_kriticni_odsječak(m);
 
 		m->stanje[id] = 'O'; // Filozof razmišlja
 
-		spusti_vilice(m, id);
+		spusti_vilice(m, id); // Spustanje vilica ce osloboditi dretve (susjedne filozofe) koji su cekali na te vilice
 
 		ispisi_stanje(m, id);
 
@@ -171,7 +172,7 @@ int main()
 {
 	struct monitor m;
 	pthread_t filozofi[BROJ_FILOZOFA];
-	struct filozof_podaci fp[BROJ_FILOZOFA];
+	struct filozof_podaci fp[BROJ_FILOZOFA]; // Podaci koji se salju dretvama
 
 	init_monitor(&m);
 
