@@ -168,6 +168,12 @@ void *filozof_dretva(void *arg)
 	return NULL;
 }
 
+// Program treba zadovoljavati nekoliko uvjeta:
+// - svaki filozof pocinje u stanju misljenja, zatim postane gladan, pa zatim pocne jesti (ako ima slobodnih vilica), pa se onda vraca na misljenje
+// - 2 susjedna filozofa ne mogu jesti u isto vrijeme
+// - ukoliko je filozof gladan a jedan od njegovih susjeda jede, onda je u stanju cekanja
+// - ukoliko filozof zavrsi s jelom, onda mora vratiti vilice na stol i poceti misliti bez cekanja
+// - filozof ne smije pre dugo biti u stanju cekanja ili ce izgladnjeti
 int main()
 {
 	struct monitor m;

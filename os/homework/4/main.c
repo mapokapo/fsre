@@ -31,10 +31,10 @@
 #define SLOWMODE 1 // 1 za sporo izvrsavanje, 0 za brzo izvrsavanje
 #define BROJ_SJEDALA 5
 
-sem_t sem_sva_sjedala_zauzeta; // Semafor za signalizaciju da su sva sjedala zauzeta
-sem_t sem_voznja_gotova;			 // Semafor za signalizaciju da je voznja gotova
-sem_t sem_vrtuljak_prazan;		 // Semafor za signalizaciju da je vrtuljak prazan
-sem_t sem_sjedalo_mutex;			 // Koristimo semafor kao mutex za zauzimanje sjedala
+sem_t sem_sva_sjedala_zauzeta; // Binarni semafor za signalizaciju da su sva sjedala zauzeta
+sem_t sem_voznja_gotova;			 // Semafor [0..BROJ_SJEDALA] za signalizaciju da je voznja gotova
+sem_t sem_vrtuljak_prazan;		 // Semafor [0..BROJ_SJEDALA] za signalizaciju da je vrtuljak prazan
+sem_t sem_sjedalo_mutex;			 // Koristimo binarni semafor kao mutex za zauzimanje sjedala
 
 int zauzeta_sjedala = 0; // Broj zauzetih sjedala
 
@@ -60,17 +60,8 @@ void *posjetitelj(void *arg)
 				sleep(1);														// Dodajemo jos jednu sekundu delay da vrtuljak ne pocne iste sekunde kad i zadnji posjetitelj sjedne
 				sem_post(&sem_sva_sjedala_zauzeta); // ...signaliziraj da su sva sjedala zauzeta
 			}
-			sem_post(&sem_sjedalo_mutex); // Oslobodi mutex da bi dopustio drugim posjetiteljima da zauzmu sjedala
 		}
-		else // Ako nema slobodnih mjesta...
-		{
-			// ...oslobodi mutex i cekaj da vrtuljak zavrsi voznju, zatim pokusaj ponovno
-			sem_post(&sem_sjedalo_mutex);
-			sem_post(&sem_vrtuljak_prazan); // Otpusti lock za ostale posjetitelje
-			if (SLOWMODE)
-				usleep(1000); // Mali delay da se sprijeci busy waiting. Nije potrebno u brzom modu
-			continue;
-		}
+		sem_post(&sem_sjedalo_mutex); // Oslobodi mutex da bi dopustio drugim posjetiteljima da zauzmu sjedala
 
 		// Cekaj dok vrtuljak ne zavrsi voznju
 		sem_wait(&sem_voznja_gotova);
