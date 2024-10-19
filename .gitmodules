@@ -1,3 +1,6 @@
 [submodule "rwa/projects/projekt_1"]
 	path = rwa/projects/projekt_1
 	url = https://github.com/mapokapo/rwa-zadaca
+[submodule "ramu/projects/ramu-math-app"]
+	path = ramu/projects/ramu-math-app
+	url = git@github.com:mapokapo/ramu-math-app.git
