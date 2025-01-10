@@ -1,7 +1,8 @@
 # Racunalne Mreze
 
-- [\*] - vazno
-- [x] - pitanje se ponavlja vise od jednom
+- [\*] vazno, vjv ce bit na ispitu
+- [x] pitanje se ponavlja vise od jednom na prezentacijama
+- [?] ne znam treba li ucit
 
 ## 1. PREZENTACIJA
 
@@ -32,10 +33,6 @@
 
 ## 2. PREZENTACIJA
 
-- [\*] vazno
-- [x] pitanje se ponavlja vise od jednom
-- [?] ne znam treba li
-
 - [\*] sirina pojasa, harry nyquist formula
 - [\*] de/modulatori, vrste modulacije (amplitudna, frekvencijska, fazna)
 - [?] konstelacijski dijagram (QAM, V.32, V.34)
@@ -59,10 +56,6 @@
 - [\*] sekvenca poruka, struja okteta, datagram
 
 ## 3. PREZENTACIJA
-
-- [\*] vazno
-- [x] pitanje se ponavlja vise od jednom
-- [?] ne znam treba li
 
 - namjenski i komutirani krug
 - DTE (oprema terminala podataka), DCE (oprema podatkovnog terminalnog kruga)
@@ -94,10 +87,6 @@
 - [\*] gateway (omogucuje spajanje dvaju potpuno razlicitih LAN-ova (npr. ISO i TCP/IP model) tako sto implementira citav mrezni sloj za svaku od mreza)
 
 ## 4. PREZENTACIJA
-
-- [\*] vazno
-- [x] pitanje se ponavlja vise od jednom
-- [?] ne znam treba li
 
 - protokoli (nabrojati, transport: TCP, UDP, BGP, network: IP, ICMP, RIP, data link: ARP, RARP)
 - IP adrese, klase, podmreze, besklasno adresiranje
