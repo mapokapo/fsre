@@ -13,7 +13,7 @@ def run_bfs(search_space_data: SearchSpaceData) -> Union[AlgorithmResult, None]:
 	# Solving the problem using the BFS algorithm
 
 	# Queue with tuples (current_state, path_so_far, cost_so_far)
-	open_list: List[Tuple[str, List[str], 0]] = [(start_state, [start_state], 0)]
+	open_list: List[Tuple[str, List[str], int]] = [(start_state, [start_state], 0)]
 	visited: Set[str] = set()
 	states_visited = 0
 
@@ -22,7 +22,7 @@ def run_bfs(search_space_data: SearchSpaceData) -> Union[AlgorithmResult, None]:
 		current_state, path_so_far, cost_so_far = open_list.pop(0)
 		states_visited += 1
 
-		# Check if the current state is any o the goal states
+		# Check if the current state is any of the goal states
 		if current_state in goal_states:
 				return AlgorithmResult(
 						states_visited = states_visited,
@@ -37,7 +37,7 @@ def run_bfs(search_space_data: SearchSpaceData) -> Union[AlgorithmResult, None]:
 		visited.add(current_state)
 
 		# Expand the current state
-		# In BFS, we sort the neighbors alphabetically
+		# In BFS, we sort the neighbors alphabetically before adding them to the queue. The queue itself is never sorted entirely, only the chunks of neighbors that are added at once.
 		for neighbor, step_cost in sorted(search_space.get(current_state, []), key=lambda x: x[0]):
 			new_cost = cost_so_far + step_cost
 

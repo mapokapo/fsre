@@ -6,7 +6,7 @@ from result import print_result
 args = get_args()
 
 search_space_data = parse_search_space(args.ss.readlines())
-heuristic_data = parse_heuristic(args.h.readlines(), args.h.name) if args.alg == Algorithm.astar else None
+heuristic_data = parse_heuristic(args.h.readlines()) if args.alg == Algorithm.astar else None
 
 def main():
   result = None
