@@ -7,7 +7,7 @@ from result import AlgorithmResult
 def run_bfs(search_space_data: SearchSpaceData) -> Union[AlgorithmResult, None]:
 	start_state, goal_states, search_space = search_space_data
 
-	# 1. Algorithm must print out its name in the format "# <algorithm>"
+	# Algorithms must print out their name in the format "# <algorithm>"
 	print("# BFS")
 
 	# Solving the problem using the BFS algorithm

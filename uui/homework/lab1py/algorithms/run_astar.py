@@ -7,7 +7,7 @@ from result import AlgorithmResult
 def run_astar(search_space_data: SearchSpaceData, heuristic_data: HeuristicData, heuristic_file_name: str) -> Union[AlgorithmResult, None]:
 	start_state, goal_states, search_space = search_space_data
 
-	# 1. Algorithm must print out its name in the format "# <algorithm>"
+	# Algorithms must print out their name in the format "# <algorithm>"
 	# A* algorithm additionally must print out the name of the file used for the heuristic
 	print(f"# A-STAR {heuristic_file_name}")
 
