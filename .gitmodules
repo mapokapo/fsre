@@ -4,3 +4,6 @@
 [submodule "ramu/projects/ramu-math-app"]
 	path = ramu/projects/ramu-math-app
 	url = git@github.com:mapokapo/ramu-math-app.git
+[submodule "ramu/projects/ramu-fitquest-app"]
+	path = ramu/projects/ramu-fitquest-app
+	url = git@github.com:mapokapo/ramu-fitquest-app.git
