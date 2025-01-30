@@ -23,17 +23,15 @@ def run_ucs(search_space_data: SearchSpaceData) -> Union[AlgorithmResult, None]:
 	# Priority queue with tuples (cost_so_far, current_state, path_so_far). It is important to remember that the first element of the tuple is the one used for sorting by the heapq module.
 	open_list: List[Tuple[int, str, List[str]]] = [(0, start_state, [start_state])]
 	visited: Dict[str, int] = {}
-	states_visited = 0
 
 	while open_list:
 		# Dequeue the first element. The priority queue is a min-heap, so the element with the smallest cost will be dequeued first.
 		cost_so_far, current_state, path_so_far = heapq.heappop(open_list)
-		states_visited += 1
 
 		# Check if the current state is any of the goal states, and return the result if it is.
 		if current_state in goal_states:
 				return AlgorithmResult(
-						states_visited = states_visited,
+						states_visited = len(visited) + 1,
 						path_length = len(path_so_far),
 						total_cost = cost_so_far,
 						path = path_so_far

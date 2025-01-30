@@ -22,17 +22,15 @@ def run_bfs(search_space_data: SearchSpaceData) -> Union[AlgorithmResult, None]:
 	# List with tuples (current_state, path_so_far, cost_so_far)
 	open_list: List[Tuple[str, List[str], int]] = [(start_state, [start_state], 0)]
 	visited: Set[str] = set()
-	states_visited = 0
 
 	while open_list:
 		# Remove the first element. We don't use a priority queue in BF, so we don't need to sort the list.
 		current_state, path_so_far, cost_so_far = open_list.pop(0)
-		states_visited += 1
 
 		# Check if the current state is any of the goal states, and return the result if it is.
 		if current_state in goal_states:
 				return AlgorithmResult(
-						states_visited = states_visited,
+						states_visited = len(visited) + 1,
 						path_length = len(path_so_far),
 						total_cost = cost_so_far,
 						path = path_so_far
