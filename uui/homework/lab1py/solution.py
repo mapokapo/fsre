@@ -10,7 +10,7 @@ from result import (AlgorithmResult, CheckResult, print_algorithm_result,
 args = get_args()
 
 search_space_data = parse_search_space(args.ss.readlines())
-heuristic_data = parse_heuristic(args.h.readlines())
+heuristic_data = None if args.h is None else parse_heuristic(args.h.readlines())
 
 def main():
   # Heuristic checking flow
