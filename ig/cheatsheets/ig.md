@@ -3,7 +3,7 @@
 ## **1. Uloga standarda u inženjerskoj grafici**
 
 - **Inženjerska grafika** – Područje vizualnog računarstva koje koristi računala za stvaranje i manipulaciju slikovnim i prostornim podacima.
-- **Standard** – Propis ili odredba koja se primjenjuje kako bi se osigurala dosljednost u tehničkim crtežima.
+- **Standard** – Propis ili odredba, utvrđena zakonom, tradicijom ili dogovorom, koja se primjenjuje kako bi se osigurala dosljednost u tehničkim crtežima.
 - **Standardizacija** – Proces donošenja i objavljivanja standarda, čime se omogućava njihova primjena u praksi.
 
 ## **2. Rezultati standardizacije**
@@ -651,8 +651,3 @@ U ortogonalnoj projekciji, dimenzije koje su paralelne s projekcijskim ravninama
 7. **Specijalni presjeci** – složene kombinacije presjeka, npr. presjek s dvije ravnine pod kutom većim od 90°.
 
 Presjeci omogućavaju bolju čitljivost tehničkih crteža i lakše razumijevanje geometrije strojnog dijela.
-
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({ tex2jax: {inlineMath: [['$', '$']]}, messageStyle: "none" });
-</script>
