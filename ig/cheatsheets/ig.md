@@ -26,7 +26,7 @@
 
 ## **5. Formati crteža**
 
-- **Osnovni format A0** – Površina 1m², omjer stranica 2:1.
+- **Osnovni format A0** – Površina 1m², omjer stranica $\sqrt{2}:1$.
 - **Manji formati** – Dobivaju se polovljenjem većeg formata (A1, A2, A3, A4…).
 - **ISO 216** – Standard koji definira serije A, B i C.
   - **Serija A** – Koristi se za tehničke crteže.
@@ -95,7 +95,7 @@ Pojmovi vezani za standardizaciju:
 
 **Dobivanje osnovnog formata:**
 
-- **Osnovni format A0** ima površinu **1 m²**, a odnos stranica mu je **2:1**.
+- **Osnovni format A0** ima površinu **1 m²**, a odnos stranica mu je **$\sqrt{2}:1$**.
 - **Manji formati** dobivaju se polovljenjem većeg formata tako da kraća stranica postaje dulja stranica novog formata.
 
 **Definicija i vrste mjerila:**
@@ -113,7 +113,7 @@ Pojmovi vezani za standardizaciju:
 
 ISO standard za seriju A temelji se na sljedećim principima:
 
-1. **Omjer visine i širine** svih formata je **2:1**.
+1. **Omjer visine i širine** svih formata je **$\sqrt{2}:1$**.
 2. **Osnovni format A0** ima površinu **1 m²**.
 3. **Svaki sljedeći format** dobiva se polovljenjem većeg formata (A1 = pola A0, A2 = pola A1…).
 4. **Dimenzije svih formata** izražene su u cijelim milimetrima (mm).
@@ -651,3 +651,8 @@ U ortogonalnoj projekciji, dimenzije koje su paralelne s projekcijskim ravninama
 7. **Specijalni presjeci** – složene kombinacije presjeka, npr. presjek s dvije ravnine pod kutom većim od 90°.
 
 Presjeci omogućavaju bolju čitljivost tehničkih crteža i lakše razumijevanje geometrije strojnog dijela.
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({ tex2jax: {inlineMath: [['$', '$']]}, messageStyle: "none" });
+</script>
