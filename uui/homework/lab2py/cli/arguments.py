@@ -6,7 +6,7 @@ class Arguments():
 	Attributes:
 		training_data (str): The path to the training data file.
 		testing_data (str): The path to the testing data file.
-		--max_depth (int): The maximum depth of the decision tree.
+		max_depth (int): The maximum depth of the decision tree.
 	"""
 	
 	training_data: TextIO
