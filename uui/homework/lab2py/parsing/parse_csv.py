@@ -4,7 +4,7 @@ from typing import List
 CSVData = List[List[str]]
 
 
-def parse_csv(lines: list[str]) -> CSVData:
+def parse_csv(lines: List[str]) -> CSVData:
 		"""Parse a CSV file from a list of lines.
 
 		Args:

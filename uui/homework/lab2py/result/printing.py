@@ -1,5 +1,3 @@
-from typing import Union
-
 from .result import ID3Result
 
 
@@ -11,12 +9,13 @@ def print_id3_result(result: ID3Result) -> None:
 	# <tree_level>:<feature_name>=<feature_value> <tree_level+1>:<feature_name>=<feature_value> ...
 	# ...
 	print("[BRANCHES]:")
-	for layer in result.layers:
-		for node in layer:
-			if node.is_leaf:
-				print(f"{node.leaf_value}")
-			else:
-				print(f"{node.tree_level}:{node.feature_name}={node.feature_value}", end=" ")
-				for child in node.children:
-					print(f"{child.tree_level}:{child.feature_name}={child.feature_value}", end=" ")
-				print(node.leaf_value)
+	for branch in result.branches:
+		print(branch)
+	
+	print("[PREDICTIONS]:", " ".join(result.predictions))
+
+	print(f"[ACCURACY]: {result.accuracy:.5f}")
+
+	print("[CONFUSION_MATRIX]:")
+	for row in result.confusion_matrix:
+		print(" ".join(str(value) for value in row))

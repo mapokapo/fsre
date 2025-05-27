@@ -1,14 +1,12 @@
-from typing import Union
-
-from cli import Algorithm, get_args
+from cli import get_args
+from algorithms import run_id3
 from parsing import parse_csv
-from result import (AlgorithmResult, CheckResult, print_algorithm_result,
-                    print_check_result)
+from result import print_id3_result
 
 args = get_args()
 
-training_data = parse_csv(args.training_data_file_path.readlines())
-testing_data = parse_csv(args.testing_data_file_path.readlines())
+training_data = parse_csv(args.training_data.readlines())
+testing_data = parse_csv(args.testing_data.readlines())
 
 def main():
 	result = run_id3(training_data, testing_data, args.max_depth)

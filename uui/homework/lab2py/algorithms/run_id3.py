@@ -1,6 +1,6 @@
 from parsing import CSVData
 from result import ID3Result
-from algorithms import ID3Model
+from .id3_model import ID3Model
 
 
 def run_id3(training_data: CSVData, testing_data: CSVData, max_depth: int) -> ID3Result:
