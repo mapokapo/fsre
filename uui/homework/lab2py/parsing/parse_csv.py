@@ -1,17 +1,31 @@
 import csv
-from typing import List
+from typing import List, Tuple
 
-CSVData = List[List[str]]
+Row = List[str]
+Dataset = List[Row]
+Label = str
+FeatureName = str
+FeatureIndex = int
+ModelInput = Tuple[Dataset, List[Label], List[FeatureName], str]
 
 
-def parse_csv(lines: List[str]) -> CSVData:
+def parse_csv(lines: List[str]) -> ModelInput:
 		"""Parse a CSV file from a list of lines.
 
 		Args:
 				lines: The lines of the CSV file.
 
 		Returns:
-				A list of rows, where each row is a list of strings. Note: the first row is usually the header row.
+				ModelInput: A tuple containing the dataset, labels, feature names, and label name.
 		"""
-		reader = csv.reader(lines)
-		return [row for row in reader]
+		reader = list(csv.reader(lines))
+		header: List[str] = reader[0]
+		rows: Dataset = reader[1:]
+
+		features: List[FeatureName] = header[:-1]
+		label_name: FeatureName = header[-1]
+
+		data: Dataset = [row[:-1] for row in rows]
+		labels: List[Label] = [row[-1] for row in rows]
+
+		return data, labels, features, label_name
