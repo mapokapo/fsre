@@ -1,6 +1,6 @@
 from parsing import FeatureName, Label, Dataset, Row
 from collections import deque, defaultdict, Counter
-from result import ID3Result, ConfusionMatrix
+from result import ID3Result
 from .id3_node import ID3Node
 from .utils import information_gain
 from typing import List, Tuple, Dict, Union, Set
@@ -20,7 +20,10 @@ class ID3Model:
 		"""Fit the ID3 model to the training dataset.
 
 		Args:
-			training_data (Dataset): The training data to fit the model on. The first row is a header row, containing the feature names, except the last column, which is the name of the label.
+			dataset (Dataset): The training data to fit the model on.
+			labels (List[Label]): The labels corresponding to the training data.
+			features (List[FeatureName]): The names of the features in the dataset.
+			max_depth (int): The maximum depth of the decision tree. If less than 1, the tree will be a single leaf node with the majority label.
 		"""
 		self.features = features[:]
   

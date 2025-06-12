@@ -37,16 +37,3 @@ def information_gain(data: Dataset, labels: List[Label], feature_index: FeatureI
 		weighted_entropy: float = sum((len(subset) / len(labels)) * entropy(subset) for subset in subsets.values())
 
 		return total_entropy - weighted_entropy
-
-def confusion_matrix(y_true: List[Label], y_pred: List[Label]) -> None:
-    labels = sorted(set(y_true + y_pred))
-    label_idx: Dict[Label, int] = {label: i for i, label in enumerate(labels)}
-    matrix: List[List[int]] = [[0 for _ in labels] for _ in labels]
-
-    for true, pred in zip(y_true, y_pred):
-        matrix[label_idx[true]][label_idx[pred]] += 1
-
-    print("Confusion Matrix:")
-    print("True\\Pred", "\t".join(labels))
-    for i, row in enumerate(matrix):
-        print(f"{labels[i]}\t\t" + "\t".join(str(x) for x in row))
