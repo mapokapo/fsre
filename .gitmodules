@@ -7,3 +7,6 @@
 [submodule "ramu/projects/ramu-fitquest-app"]
 	path = ramu/projects/ramu-fitquest-app
 	url = git@github.com:mapokapo/ramu-fitquest-app.git
+[submodule "ui/homework"]
+	path = ui/homework
+	url = https://github.com/mapokapo/ui-zadaca
