@@ -4,6 +4,12 @@
 /*
 Zadaca 1: Napišite program koji će ispisati proizvoljnu poruku na monitor onoliko puta koliki je rang procesa koji ispisuje poruku. Pokrenite dobiveni program na 1, 2, 7 i 11 procesora.
 
+mpicc main.c
+mpirun -np 1 ./a.out
+mpirun -np 2 ./a.out
+mpirun -np 7 ./a.out
+mpirun -np 11 ./a.out
+
 Leo Petrović 695/RM
 */
 
