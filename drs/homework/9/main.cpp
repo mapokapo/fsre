@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
   }
 
   MPI::COMM_WORLD.Gather(elementi.data(), 100, MPI::INT,
-                         globalniElementi.data(), 100, MPI::INT,
+                         rang == 0 ? globalniElementi.data() : nullptr, 100, MPI::INT,
                          0);
 
   if (rang == 0)
