@@ -18,7 +18,7 @@ vector<int> ucitaj_podatke(const string &filename)
   if (!file)
   {
     cerr << "Ne mogu otvoriti datoteku " << filename << endl;
-    MPI_Abort(MPI_COMM_WORLD, 1);
+    MPI::COMM_WORLD.Abort(1);
   }
   int x;
   while (file >> x)

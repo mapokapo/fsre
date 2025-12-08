@@ -1,5 +1,5 @@
 /*
-Zadaca 6: Napišite program u kojem će svi procesi generirati jedan nasumičan broj, nakon čega će jedan od procesa načiniti aritmetičku sumu brojeva svih procesa koristeći operaciju redukcije, te će dobivenu aritmetičku srednju vrijednost poslati svim ostalim procesima. Procesi će nakon toga izračunati odstupanje u postocima u odnosu na dobivenu srednju vrijednost. Koristite isključivo kolektivnu komunikaciju. Program napisati korištenjem C++ funkcija.
+Zadaca 7: Napišite program u kojem će svi procesi generirati jedan nasumičan broj, nakon čega će jedan od procesa načiniti aritmetičku sumu brojeva svih procesa koristeći operaciju redukcije, te će dobivenu aritmetičku srednju vrijednost poslati svim ostalim procesima. Procesi će nakon toga izračunati odstupanje u postocima u odnosu na dobivenu srednju vrijednost. Koristite isključivo kolektivnu komunikaciju. Program napisati korištenjem C++ funkcija.
 
 Leo Petrović 695/RM
 */
