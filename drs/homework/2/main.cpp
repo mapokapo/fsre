@@ -1,24 +1,15 @@
-#include <iostream>
-#include <mpi.h>
-
-using namespace std;
-
-#define SIZE 100
-
 /*
-Zadaca 2: Napišite program korištenjem C++ funkcija u kojem će jedan proces poslati vektor od 100 elemenata svim ostalim procesima, nakon čega će svaki proces vratiti taj vektor procesu pošiljatelju, ali uvećan za N+1, gdje je N broj procesa. Pripazite na količinu vraćenih podataka!
-
-Objasnjeno:
-- root process salje niz od 100 elemenata (svi elementi su 0) svim ostalim procesima (njih 99)
-- svaki process primi niz, uvecava svaki element za N+1 (N je rang tog procesa), i salje nazad root procesu
-- root process prima nizove od svih ostalih procesa i ispisuje elemente svakog procesa
-- niz unutar svakog procesa ce imati istih 100 elemenata, i oni ce biti jednaki rangu tog procesa (npr. proces 70 ce imati niz od 100 brojeva, gdje je svaki broj 71)
-
-mpic++ main.cpp
-mpirun -np 100 --oversubscribe ./a.out
+Zadaca 1: Za slanje ranga procesa 0 upotrijebljen je MPI::Comm.Bcast svim procesima unutar komunikatora. Nakon primitka procesi vraćaju procesu 0 naziv računala koje je primilo poruku. Proces 0 prima poruku od ostalih procesa MPI::Comm.Irecv. Ispisati na zaslon da su primljene poruke na strani procesa 0. Program napisati korištenjem C++ funkcija.
 
 Leo Petrović 695/RM
 */
+
+#include <iostream>
+#include <mpi.h>
+#include <vector>
+#include <string>
+
+using namespace std;
 
 int main(int argc, char *argv[])
 {
@@ -26,69 +17,52 @@ int main(int argc, char *argv[])
 
   int rang = MPI::COMM_WORLD.Get_rank();
   int velicina = MPI::COMM_WORLD.Get_size();
-  int niz[SIZE];
 
-  // Proces nula ("root process") inicijalizira niz od 100 elemenata ispunjen brojem 0
-  if (rang == 0)
-  {
-    for (int i = 0; i < SIZE; i++)
-    {
-      niz[i] = 0;
-    }
-  }
+  // root proces salje svoj rang svim ostalim procesima
+  // rang root procesa se mora definirati kao nova varijabla jer ce se u nju spremiti vrijednost u svim non-root procesima
+  int root_rank = 0;
+  MPI::COMM_WORLD.Bcast(&root_rank, 1, MPI::INT, 0);
 
-  // Root proces salje niz svim ostalim procesima (njih 99)
-  // Ovim pozivom se ujedno i primi taj niz u non-root procesima
-  MPI::COMM_WORLD.Bcast(niz, SIZE, MPI_INT, 0);
+  // dohvacanje imena racunala
+  char ime_racunala[MPI::MAX_PROCESSOR_NAME];
+  int duzina_ime = 0;
+  MPI::Get_processor_name(ime_racunala, duzina_ime);
 
-  // Ulazna grana za non-root procese
   if (rang != 0)
+  // ulazna grana za obicne procese
   {
-    for (int i = 0; i < SIZE; i++)
-    {
-      // Svaki element niza se uveca za N + 1, gdje je N rang trenutnog procesa
-      // npr. ako je trenutni rang procesa 1, onda ce niz biti popunjen brojem 2
-      niz[i] += rang + 1;
-    }
-
-    // Modificirani niz se posalje root procesu
-    MPI::COMM_WORLD.Send(niz, SIZE, MPI_INT, 0, 0);
+    // proces salje ime racunala nazad root procesu
+    MPI::COMM_WORLD.Send(ime_racunala, duzina_ime, MPI::CHAR, 0, 0);
   }
-  // Ulazna grana za root proces
   else
+  // ulazna grana za root proces
   {
-    // Alociranje memorije za primljene nizove
-    // Svaki niz ima 100 elemenata, i root proces ce primiti od svakog procesa po jedan niz
-    // npr. ako je broj procesa u komunikatoru 100, onda ce biti 99 nizova po 100 elemenata
-    int *gathered = new int[(velicina - 1) * SIZE];
+    // root proces prima imena racunala od svih ostalih procesa
+    vector<string> imena(velicina);
+    vector<MPI::Request> requests(velicina);
 
+    // mora ici od 1-velicina umjesto od 0-velicina jer je 0 root proces, pozivanje Irecv bi tada napravilo beskonacnu petlju
     for (int i = 1; i < velicina; i++)
     {
-      // Memorijski prostor za niz od 100 elemenata od nekog non-root procesa (rang od 1 do 100, ukljucivo)
-      int *buf = &gathered[(i - 1) * SIZE];
-
-      // Root proces prima niz za trenutni proces
-      MPI::COMM_WORLD.Recv(buf, SIZE, MPI_INT, i, 0);
-
-      // Ispis
-      cout << "Prvih i zadnjih 5 elemenata procesa " << i << ":";
-      for (int j = 0; j < 5; j++)
-      {
-        cout << " " << buf[j];
-      }
-      cout << " ...";
-      for (int j = SIZE - 5; j < SIZE; j++)
-      {
-        cout << " " << buf[j];
-      }
-      cout << endl;
+      imena[i].resize(MPI::MAX_PROCESSOR_NAME);
+      requests[i] = MPI::COMM_WORLD.Irecv(imena[i].data(),
+                                          imena[i].size(),
+                                          MPI::CHAR,
+                                          i,
+                                          0);
     }
 
-    // Ciscenje memorije
-    delete[] gathered;
+    // root proces mora sacekati sve zahtjeve da zavrse prije nego sto se mogu ispisati
+    MPI::Request::Waitall(velicina - 1, &requests[1]);
+
+    // mora ici od 1-velicina umjesto od 0-velicina jer je 0 root proces
+    for (int i = 1; i < velicina; i++)
+    {
+      cout << "Proces 0 je primio poruku od procesa " << i
+           << " sa racunala: " << imena[i].data() << endl;
+    }
   }
 
   MPI::Finalize();
-
   return 0;
 }

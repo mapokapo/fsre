@@ -1,41 +1,32 @@
 /*
-Zadaca 5: Uporabom MPI-a izraditi simulaciju raspodijeljenog problema n filozofa. Pri svakoj promjeni program mora vizualno prikazati za sve filozofe što oni rade. Npr. kada filozof 4 ide jesti, tada treba ispis izgledati otprilike ovako:
-"Stanje filozofa: X o O X o" (X-jede, O-razmišlja, o-čeka na vilice).
-
-Problem pet filozofa: filozofi obavljaju samo dvije različite aktivnosti: misle ili jedu. To rade na poseban način. Na jednom okruglom stolu nalazi se pet tanjura te pet štapića (između svaka dva tanjura po jedan). Filozof prilazi stolu, uzima lijevi štapić, pa desni te jede. Zatim vraća štapiće na stol i odlazi misliti.
-
-Program napisati korištenjem C++ funkcija.
+Zadaca 5: Napišite program korištenjem C++ funkcija u kojem će svi procesi učitati podatke iz proizvoljne datoteke, sinkronizirati se na barijeri, te zatim ispisati učitane elemente, i to na način da proces 0 ispiše prvi, proces 1 drugi, itd. Program mora biti moguće izvršiti na proizvoljnom broju procesora bez gubitka funkcionalnosti.
 
 Leo Petrović 695/RM
 */
 
 #include <iostream>
+#include <fstream>
 #include <mpi.h>
 #include <vector>
-#include <unistd.h>
 
 using namespace std;
 
-enum Stanje
+vector<int> ucitaj_podatke(const string &filename)
 {
-  MISLI = 0,
-  CEKA = 1,
-  JEDE = 2
-};
-
-void ispisi_stanja(const vector<int> &stanje)
-{
-  cout << "Stanje filozofa: ";
-  for (int s : stanje)
+  vector<int> podatci;
+  ifstream file(filename);
+  if (!file)
   {
-    if (s == JEDE)
-      cout << "X ";
-    else if (s == CEKA)
-      cout << "o ";
-    else
-      cout << "O ";
+    cerr << "Ne mogu otvoriti datoteku " << filename << endl;
+    MPI::COMM_WORLD.Abort(1);
   }
-  cout << endl;
+  int x;
+  // citamo brojeve iz datoteke (razmaknute sa whitespaceom) dok god ih ima
+  while (file >> x)
+  {
+    podatci.push_back(x);
+  }
+  return podatci;
 }
 
 int main(int argc, char *argv[])
@@ -45,81 +36,26 @@ int main(int argc, char *argv[])
   int rang = MPI::COMM_WORLD.Get_rank();
   int velicina = MPI::COMM_WORLD.Get_size();
 
-  int N = velicina - 1; // broj filozofa
+  string ime_datoteke = "podatci.txt";
+  vector<int> podatci = ucitaj_podatke(ime_datoteke);
 
-  if (rang == 0)
+  // procesi se ovdje sinkroniziraju - cekaju jedni na druge da svi zavrse ucitavanje podataka
+  MPI::COMM_WORLD.Barrier();
+
+  // ispis podataka
+  for (int i = 0; i < velicina; i++)
   {
-    // root kontrolira vilice
-    vector<bool> vilica(N, true); // sve vilice slobodne
-    vector<int> stanje(N, MISLI);
-
-    while (true)
+    if (rang == i)
     {
-      MPI::Status status;
-      int zahtjev[2];
-      MPI::COMM_WORLD.Recv(zahtjev, 2, MPI::INT, MPI_ANY_SOURCE, 0, status);
-
-      int filozof = zahtjev[0];
-      int akcija = zahtjev[1];
-
-      int L = filozof;           // lijeva vilica
-      int D = (filozof + 1) % N; // desna vilica
-
-      if (akcija == 1) // filozof trazi vilice
+      cout << "Proces " << rang << " je učitao podatke: ";
+      int max_index = min((int)podatci.size(), rang + 1);
+      for (int j = 0; j < max_index; ++j)
       {
-        stanje[filozof] = CEKA;
-        ispisi_stanja(stanje);
-
-        if (vilica[L] && vilica[D])
-        {
-          vilica[L] = vilica[D] = false;
-          stanje[filozof] = JEDE;
-          MPI::COMM_WORLD.Send(&akcija, 1, MPI::INT, filozof + 1, 0);
-        }
-        else
-        {
-          int wait = 0;
-          MPI::COMM_WORLD.Send(&wait, 1, MPI::INT, filozof + 1, 0);
-        }
-
-        ispisi_stanja(stanje);
+        cout << podatci[j] << " ";
       }
-      else if (akcija == 2) // filozof zavrsio jesti
-      {
-        vilica[L] = vilica[D] = true;
-        stanje[filozof] = MISLI;
-        ispisi_stanja(stanje);
-      }
+      cout << endl;
     }
-  }
-  else
-  {
-    // FILOZOF proces
-    int id = rang - 1;
-
-    while (true)
-    {
-      sleep(1); // misli
-
-      // salje serveru zahtjev za vilice
-      int zahtjev[2] = {id, 1};
-      MPI::COMM_WORLD.Send(zahtjev, 2, MPI::INT, 0, 0);
-
-      int odgovor;
-      MPI::COMM_WORLD.Recv(&odgovor, 1, MPI::INT, 0, 0);
-
-      while (odgovor == 0) // vilice zauzete
-      {
-        sleep(1);
-        MPI::COMM_WORLD.Send(zahtjev, 2, MPI::INT, 0, 0);
-        MPI::COMM_WORLD.Recv(&odgovor, 1, MPI::INT, 0, 0);
-      }
-
-      sleep(1); // jede
-
-      int zavrsi[2] = {id, 2};
-      MPI::COMM_WORLD.Send(zavrsi, 2, MPI::INT, 0, 0);
-    }
+    MPI::COMM_WORLD.Barrier();
   }
 
   MPI::Finalize();

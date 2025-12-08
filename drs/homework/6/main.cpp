@@ -1,32 +1,17 @@
 /*
-Zadaca 6: Napišite program korištenjem C++ funkcija u kojem će svi procesi učitati podatke iz proizvoljne datoteke, sinkronizirati se na barijeri, te zatim ispisati učitane elemente, i to na način da proces 0 ispiše prvi, proces 1 drugi, itd. Program mora biti moguće izvršiti na proizvoljnom broju procesora bez gubitka funkcionalnosti.
+Zadaca 6: Napišite program u kojem će svi procesi generirati jedan nasumičan broj, nakon čega će jedan od procesa načiniti aritmetičku sumu brojeva svih procesa koristeći operaciju redukcije, te će dobivenu aritmetičku srednju vrijednost poslati svim ostalim procesima. Procesi će nakon toga izračunati odstupanje u postocima u odnosu na dobivenu srednju vrijednost. Koristite isključivo kolektivnu komunikaciju. Program napisati korištenjem C++ funkcija.
 
 Leo Petrović 695/RM
 */
 
 #include <iostream>
-#include <fstream>
 #include <mpi.h>
 #include <vector>
+#include <cstdlib>
+#include <ctime>
+#include <cmath>
 
 using namespace std;
-
-vector<int> ucitaj_podatke(const string &filename)
-{
-  vector<int> podatci;
-  ifstream file(filename);
-  if (!file)
-  {
-    cerr << "Ne mogu otvoriti datoteku " << filename << endl;
-    MPI::COMM_WORLD.Abort(1);
-  }
-  int x;
-  while (file >> x)
-  {
-    podatci.push_back(x);
-  }
-  return podatci;
-}
 
 int main(int argc, char *argv[])
 {
@@ -35,27 +20,32 @@ int main(int argc, char *argv[])
   int rang = MPI::COMM_WORLD.Get_rank();
   int velicina = MPI::COMM_WORLD.Get_size();
 
-  string ime_datoteke = "podatci.txt";
-  vector<int> podatci = ucitaj_podatke(ime_datoteke);
+  // inicijalizacija generatora slucajnih brojeva
+  srand(time(0) + rang);
 
-  // svi procesi cekaju da zavrse ucitavanje
-  MPI::COMM_WORLD.Barrier();
+  // generiramo nasumicni broj izmedu 1 i 100
+  double rand_number = rand() % 100 + 1;
 
-  // ispis podataka
-  for (int i = 0; i < velicina; i++)
+  // smjestamo sve brojeve u sumu koristeci redukciju (operacija MPI::SUM)
+  double suma = 0.0;
+  MPI::COMM_WORLD.Reduce(&rand_number, &suma, 1, MPI::DOUBLE, MPI::SUM, 0);
+
+  // racunamo srednju vrijednost na root procesu
+  double sredina = 0.0;
+  if (rang == 0)
   {
-    if (rang == i)
-    {
-      cout << "Proces " << rang << " je učitao podatke: ";
-      int max_index = min((int)podatci.size(), rang + 1);
-      for (int j = 0; j < max_index; ++j)
-      {
-        cout << podatci[j] << " ";
-      }
-      cout << endl;
-    }
-    MPI::COMM_WORLD.Barrier();
+    sredina = suma / velicina;
   }
+
+  // saljemo srednju vrijednost svim procesima
+  MPI::COMM_WORLD.Bcast(&sredina, 1, MPI::DOUBLE, 0);
+
+  // svaki proces racuna svoje odstupanje u postocima u odnosu na srednju vrijednost
+  double odstupanje = fabs(rand_number - sredina) / sredina * 100.0;
+
+  cout << "Proces " << rang << ": izabrani broj = " << rand_number
+       << ", sredina = " << sredina
+       << ", odstupanje = " << odstupanje << "%" << endl;
 
   MPI::Finalize();
   return 0;

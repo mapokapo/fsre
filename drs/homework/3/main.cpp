@@ -1,5 +1,5 @@
 /*
-Zadaca 3: Za slanje ranga procesa 0 upotrijebljen je MPI::Comm.Bcast svim procesima unutar komunikatora. Nakon primitka procesi vraćaju procesu 0 naziv računala koje je primilo poruku. Proces 0 prima poruku od ostalih procesa MPI::Comm.Irecv. Ispisati na zaslon da su primljene poruke na strani procesa 0. Program napisati korištenjem C++ funkcija.
+Zadaca 3: Generirati proizvoljnu matricu. Distribuirati pojedini redak pojedinom računalu(procesu). Formirati donju trokutastu matricu sa ispisom naziva računala(procesa) koji je ispisao pojedini redak. Program napisati korištenjem C++ funkcija.
 
 Leo Petrović 695/RM
 */
@@ -7,6 +7,7 @@ Leo Petrović 695/RM
 #include <iostream>
 #include <mpi.h>
 #include <vector>
+#include <cstdlib>
 
 using namespace std;
 
@@ -17,44 +18,57 @@ int main(int argc, char *argv[])
   int rang = MPI::COMM_WORLD.Get_rank();
   int velicina = MPI::COMM_WORLD.Get_size();
 
+  // dohvacanje imena racunala
   char ime_racunala[MPI::MAX_PROCESSOR_NAME];
   int duzina_ime = 0;
-
-  // Root proces salje svoj rang svim ostalim procesima
-  int root_rank = 0;
-  MPI::COMM_WORLD.Bcast(&root_rank, 1, MPI::INT, 0);
-
   MPI::Get_processor_name(ime_racunala, duzina_ime);
 
-  // Non-root procesi salju ime racunala nazad root procesu
-  if (rang != 0)
+  if (rang == 0)
   {
-    MPI::COMM_WORLD.Send(ime_racunala, duzina_ime, MPI::CHAR, 0, 0);
+    // root generira matricu - koristi se flat kvadratna matrica iste velicine kao broj procesa u komunikatoru
+    vector<int> matrica(velicina * velicina);
+
+    // generiranje random brojeva (0-9)
+    for (int i = 0; i < velicina * velicina; i++)
+      matrica[i] = rand() % 10;
+
+    // ispis matrice
+    cout << "Generirana matrica:" << endl;
+    for (int i = 0; i < velicina; i++)
+    {
+      for (int j = 0; j < velicina; j++)
+        cout << matrica[i * velicina + j] << " ";
+      cout << endl;
+    }
+    cout << endl;
+
+    // slanje svakog retka odgovarajućem procesu - ukljucuje i root proces
+    for (int i = 0; i < velicina; i++)
+    {
+      MPI::COMM_WORLD.Send(&matrica[i * velicina], velicina, MPI::INT, i, 0);
+    }
   }
-  // Root proces prima imena racunala od svih ostalih procesa
-  else
+
+  // svaki proces ce primiti jedan red matrice - lista brojeva
+  // matrica se pretpostavlja da ima m redova, gdje je m broj procesa u komunikatoru (inace bi postojali procesi koji ne mogu nijedan red uzeti pa ne bi nista uradili)
+  vector<int> red(velicina);
+
+  MPI::COMM_WORLD.Recv(red.data(), velicina, MPI::INT, 0, 0);
+
+  for (int turn = 0; turn < velicina; ++turn)
   {
-    vector<vector<char>> buffers(velicina);
-    vector<MPI::Request> requests(velicina);
-
-    for (int i = 1; i < velicina; i++)
+    if (rang == turn)
     {
-      buffers[i].resize(MPI::MAX_PROCESSOR_NAME);
-      requests[i] = MPI::COMM_WORLD.Irecv(buffers[i].data(),
-                                          MPI::MAX_PROCESSOR_NAME,
-                                          MPI::CHAR,
-                                          i,
-                                          0);
+      // ispis donjeg trokuta
+      cout << "Redak od procesa " << rang << " na racunalu " << ime_racunala << " je: ";
+      for (int j = 0; j <= rang; ++j)
+        cout << red[j] << " ";
+      cout << endl
+           << flush;
     }
 
-    MPI::Request::Waitall(velicina - 1, &requests[1]);
-
-    for (int i = 1; i < velicina; i++)
-    {
-      buffers[i][MPI::MAX_PROCESSOR_NAME - 1] = '\0';
-      cout << "Proces 0 je primio poruku od procesa " << i
-           << " sa racunala: " << buffers[i].data() << endl;
-    }
+    // radi ljepseg ispisa, cekamo da procesi zavrse u pravilnom redoslijedu
+    MPI::COMM_WORLD.Barrier();
   }
 
   MPI::Finalize();
