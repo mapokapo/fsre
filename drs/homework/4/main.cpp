@@ -7,6 +7,7 @@ Leo Petrović 695/RM
 #include <iostream>
 #include <mpi.h>
 #include <vector>
+#include <cstdlib>
 
 using namespace std;
 
