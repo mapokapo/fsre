@@ -10,3 +10,6 @@
 [submodule "ui/homework"]
 	path = ui/homework
 	url = https://github.com/mapokapo/ui-zadaca
+[submodule "drs/projects/drs-p2-project"]
+	path = drs/projects/drs-p2-project
+	url = git@github.com:/mapokapo/drs-p2-project.git
