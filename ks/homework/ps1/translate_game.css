@@ -1,0 +1,116 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family:
+    "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans",
+    Arial, sans-serif;
+  line-height: 1.5;
+}
+
+main {
+  background-color: #ddd;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+h1 {
+  font-size: 4rem;
+  font-weight: 400;
+  color: #666;
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+strong {
+  color: #000;
+  font-weight: 400;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+}
+
+.col > * {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.grid {
+  gap: 2.5rem;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.grid * {
+  color: #666;
+  font-size: 2rem;
+}
+
+.grid strong {
+  font-weight: bold;
+}
+
+.grid .col > strong:nth-child(2) {
+  color: #000;
+}
+
+.grid input,
+.grid button {
+  font-size: 1.5rem;
+  width: 150px;
+  padding: 0 0.5rem;
+  max-height: fit-content;
+}
+
+.grid input {
+  border: 1px solid #999;
+  border-radius: 4px;
+}
+
+.grid input:focus {
+  outline: 2px solid #4a90e2;
+  outline-offset: 1px;
+}
+
+.grid button {
+  cursor: pointer;
+  border: 1px solid #999;
+  border-radius: 4px;
+  background-color: #fff;
+}
+
+.grid button:hover {
+  background-color: #f0f0f0;
+}
+
+.grid .col > *:nth-child(2) {
+  margin-bottom: 2rem;
+}
+
+.correct {
+  color: blue;
+}
+
+.incorrect {
+  color: red;
+}
+
+.strike {
+  text-decoration: line-through;
+}
+
+.icon {
+  font-size: 1rem;
+}

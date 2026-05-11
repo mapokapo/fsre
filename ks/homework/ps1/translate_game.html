@@ -1,0 +1,36 @@
+<!doctype html>
+<!-- Napomena: projekt je uradio student Leo Petrović, bez eksterne pomoći ili biblioteka -->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ready, Set, Translate!</title>
+    <link rel="stylesheet" href="translate_game.css" />
+    <script src="dicts.js"></script>
+    <script defer src="translate_game.js"></script>
+  </head>
+  <body>
+    <main>
+      <h1>
+        Translate from <strong class="languageFrom">Spanish</strong> to
+        <strong class="languageTo">English</strong>
+      </h1>
+      <div class="row grid">
+        <div class="col">
+          <strong class="languageFrom"></strong>
+          <strong id="wordFrom"></strong>
+        </div>
+        <div class="col">
+          <strong class="languageTo"></strong>
+          <input type="text" name="answer" id="wordTo" autofocus />
+        </div>
+        <div class="col">
+          <strong>Answer</strong>
+          <button type="button" id="seeAnswer">See Answer</button>
+        </div>
+      </div>
+    </main>
+
+    <datalist id="words"></datalist>
+  </body>
+</html>
