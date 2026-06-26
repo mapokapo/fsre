@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+
+<html lang="hr">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EduLink — Papirni prototip</title>
+<style>
+/* =============================================
+   GLOBALNI STIL — Draganova estetika
+   Georgia serif, crno-bijelo, tanke linije
+   ============================================= */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: Georgia, serif;
+  background: #f0f0f0;
+  color: #111;
+  font-size: 14px;
+}
+
+/* NAVIGACIJA PROTOTIPA */
+.proto-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  background: #111;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 16px;
+  z-index: 9999;
+  flex-wrap: wrap;
+}
+.proto-nav span { font-size: 11px; color: #aaa; margin-right: 8px; white-space: nowrap; }
+.proto-nav button {
+  font-size: 11px;
+  padding: 4px 10px;
+  border: 1px solid #555;
+  background: #222;
+  color: #fff;
+  cursor: pointer;
+  font-family: Georgia, serif;
+  white-space: nowrap;
+}
+.proto-nav button:hover { background: #444; }
+.proto-nav button.active { background: #fff; color: #111; border-color: #fff; }
+
+/* STRANICE */
+.page { display: none; padding-top: 48px; min-height: 100vh; }
+.page.active { display: block; }
+
+/* ZAJEDNIČKI WRAPPER */
+.wrap {
+  max-width: 900px;
+  margin: 32px auto;
+  background: #fff;
+  border: 1px solid #999;
+}
+
+/* NAVIGACIJSKA TRAKA APLIKACIJE */
+.app-nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 10px 20px;
+  border-bottom: 1px solid #999;
+  background: #fff;
+}
+.app-nav .logo { font-weight: bold; font-size: 1.1rem; letter-spacing: 1px; margin-right: auto; }
+.app-nav a {
+  text-decoration: none;
+  color: #111;
+  font-size: 0.88rem;
+  padding-bottom: 2px;
+}
+.app-nav a.active { border-bottom: 2px solid #111; }
+.app-nav .nav-right { display: flex; gap: 8px; margin-left: auto; align-items: center; }
+.app-nav .role-badge {
+  font-size: 10px;
+  border: 1px solid #555;
+  padding: 2px 7px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* GUMBI */
+.btn {
+  padding: 7px 16px;
+  border: 1px solid #555;
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-family: Georgia, serif;
+}
+.btn:hover { background: #eee; }
+.btn-primary {
+  background: #ddd;
+  border-color: #333;
+  font-weight: bold;
+}
+.btn-sm {
+  padding: 4px 10px;
+  font-size: 0.78rem;
+  border: 1px solid #555;
+  background: #fff;
+  cursor: pointer;
+  font-family: Georgia, serif;
+}
+
+/* FORME */
+.form-wrap { max-width: 360px; margin: 0 auto; }
+.form-wrap h2 {
+  text-align: center;
+  font-size: 1rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ccc;
+}
+.field { margin-bottom: 12px; }
+.field label { display: block; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; color: #555; }
+.field input, .field select, .field textarea {
+  width: 100%;
+  padding: 7px 9px;
+  border: 1px solid #bbb;
+  font-family: Georgia, serif;
+  font-size: 13px;
+}
+.field textarea { min-height: 70px; resize: vertical; }
+.form-footer { text-align: center; margin-top: 12px; font-size: 12px; color: #555; }
+.form-footer a { color: #111; }
+
+/* RADIO GRUPE */
+.radio-group { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 14px; }
+.radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  border: 1px solid #bbb;
+  padding: 6px 14px;
+}
+
+/* CARD GRID */
+.card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.card {
+  border: 1px solid #bbb;
+  padding: 16px;
+  background: #fff;
+}
+.card h3 { font-size: 0.95rem; margin-bottom: 6px; border-bottom: 1px solid #ddd; padding-bottom: 6px; }
+.card p { font-size: 12px; color: #555; line-height: 1.5; margin-bottom: 12px; }
+.card .tag { font-size: 10px; border: 1px solid #bbb; padding: 1px 6px; letter-spacing: 1px; display: inline-block; margin-bottom: 10px; }
+
+/* LISTA TEČAJEVA */
+.course-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+}
+.course-row:last-child { border-bottom: none; }
+.course-num {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #bbb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.course-info { flex: 1; }
+.course-info strong { font-size: 13px; display: block; }
+.course-info span { font-size: 11px; color: #666; }
+.status-badge {
+  font-size: 10px;
+  border: 1px solid #888;
+  padding: 2px 8px;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+/* TABS */
+.tabs { display: flex; border-bottom: 1px solid #bbb; margin-bottom: 16px; }
+.tab {
+  padding: 7px 16px;
+  font-size: 12px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  font-family: Georgia, serif;
+  background: none;
+  border-left: none; border-right: none; border-top: none;
+}
+.tab.active { border-bottom-color: #111; font-weight: bold; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* TABLICA */
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+table th { text-align: left; border-bottom: 2px solid #999; padding: 6px 10px; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; }
+table td { padding: 7px 10px; border-bottom: 1px solid #eee; vertical-align: middle; }
+table tr:last-child td { border-bottom: none; }
+
+/* SEKCIJA */
+.section { padding: 20px; border-bottom: 1px solid #eee; }
+.section:last-child { border-bottom: none; }
+.section-title {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #777;
+  margin-bottom: 14px;
+}
+
+/* FILTERI */
+.filter-bar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.filter-bar input, .filter-bar select {
+  padding: 6px 9px;
+  border: 1px solid #bbb;
+  font-family: Georgia, serif;
+  font-size: 12px;
+}
+.filter-bar input { flex: 1; }
+
+/* PROGRESS BAR */
+.progress-outer { width: 100%; height: 8px; border: 1px solid #bbb; background: #f5f5f5; }
+.progress-inner { height: 100%; background: #555; }
+
+/* ALERT */
+.alert { border: 1px solid #999; padding: 10px 14px; margin-bottom: 14px; font-size: 13px; }
+.alert.info { background: #f5f5f5; }
+.alert.success { background: #ececec; border-style: double; }
+
+/* OPIS STRANICE (za storyboard) */
+.page-desc {
+  max-width: 900px;
+  margin: 0 auto 0;
+  background: #f8f8f0;
+  border: 1px dashed #bbb;
+  border-top: none;
+  padding: 10px 20px;
+  font-size: 11px;
+  color: #666;
+  font-style: italic;
+}
+
+/* AVATAR */
+.avatar {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #bbb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+/* BREADCRUMB */
+.breadcrumb { font-size: 11px; color: #888; margin-bottom: 14px; }
+.breadcrumb span { color: #111; }
+
+/* STAT BOX */
+.stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.stat-box {
+  border: 1px solid #bbb;
+  padding: 12px;
+  text-align: center;
+}
+.stat-box .stat-num { font-size: 1.6rem; font-weight: bold; }
+.stat-box .stat-lbl { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: #666; margin-top: 4px; }
+
+/* CERTIFIKAT */
+.cert-box {
+  border: 3px double #555;
+  padding: 32px;
+  text-align: center;
+  max-width: 500px;
+  margin: 0 auto;
+}
+.cert-box h2 { font-size: 1.4rem; letter-spacing: 3px; margin-bottom: 8px; }
+.cert-box p { font-size: 13px; color: #555; margin: 6px 0; }
+.cert-box .cert-name { font-size: 1.2rem; font-weight: bold; border-bottom: 1px solid #555; display: inline-block; padding: 0 20px 4px; margin: 12px 0; }
+
+
+
+/* MODAL / POP-UP EKRANI */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 10000;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.modal-overlay.active { display: flex; }
+.modal-card {
+  width: 100%;
+  max-width: 460px;
+  background: #fff;
+  border: 1px solid #999;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+  font-family: Georgia, serif;
+}
+.modal-header {
+  padding: 12px 18px;
+  border-bottom: 1px solid #999;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.modal-header strong {
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.modal-close {
+  border: 1px solid #555;
+  background: #fff;
+  width: 26px;
+  height: 26px;
+  cursor: pointer;
+  font-family: Georgia, serif;
+}
+.modal-body { padding: 24px 22px; text-align: center; }
+.modal-icon {
+  width: 58px;
+  height: 58px;
+  border: 3px double #555;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  font-size: 26px;
+}
+.modal-body h2 {
+  font-size: 1.05rem;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+.modal-body p {
+  font-size: 13px;
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+.modal-meta {
+  border: 1px solid #ddd;
+  padding: 10px 12px;
+  margin: 16px 0;
+  text-align: left;
+  font-size: 12px;
+  line-height: 1.7;
+  background: #fafafa;
+}
+.modal-footer {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  padding: 0 22px 22px;
+  flex-wrap: wrap;
+}
+
+/* FOOTER APP */
+.app-footer {
+  text-align: center;
+  padding: 14px;
+  border-top: 1px solid #ccc;
+  background: #f5f5f5;
+  font-size: 11px;
+  color: #888;
+  font-style: italic;
+}
+</style>
+</head>
+<body>
+<!-- =========================================
+     NAVIGACIJA PROTOTIPA
+     ========================================= -->
+<div class="proto-nav">
+<span>EduLink / Papirni prototip</span>
+<button class="active" onclick="showPage('landing')">01 Naslovna</button>
+<button onclick="showPage('register')">02 Registracija</button>
+<button onclick="showPage('login')">03 Prijava</button>
+<button onclick="showPage('courses')">04 Popis tečajeva</button>
+<button onclick="showPage('course-detail')">05 Pregled tečaja</button>
+<button onclick="showPage('create-course')">06 Natječaj (firma)</button>
+<button onclick="showPage('dashboard-firma')">07 Nadzorna ploča (firma)</button>
+<button onclick="showPage('dashboard-profesor')">08 Nadzorna ploča (profesor)</button>
+<button onclick="showPage('dashboard-polaznik')">09 Nadzorna ploča (polaznik)</button>
+<button onclick="showPage('certifikat')">10 Certifikat</button>
+<button onclick="showPage('prijave-pregled')">11 Pregled prijava</button>
+<button onclick="showPopup('modal-success')">12 Pop-up uspjeh</button>
+<button onclick="showPopup('modal-closed')">13 Pop-up zatvoreno</button>
+</div>
+<!-- =========================================
+     01 — NASLOVNA STRANICA
+     ========================================= -->
+<div class="page active" id="page-landing">
+<div class="wrap">
+<nav class="app-nav">
+<span class="logo">EduLink</span>
+<a href="javascript:void(0)" onclick="showPage('courses')">Tečajevi</a>
+<a href="javascript:void(0)" onclick="showActionPopup('O platformi', 'EduLink povezuje firme, profesore i polaznike kroz organizirane tečajeve i praćenje napretka.', 'Sekcija: informativni opis platforme')">O platformi</a>
+<a href="javascript:void(0)" onclick="showActionPopup('Podrška', 'Za pomoć korisnik može kontaktirati administratora platforme ili poslati upit podršci.', 'Kontakt: podrska@edulink.test')">Podrška</a>
+<div class="nav-right">
+<button class="btn" onclick="showPage('login')">Prijava</button>
+<button class="btn btn-primary" onclick="showPage('register')">Registracija</button>
+</div>
+</nav>
+<div class="section" style="text-align:center; padding: 40px 20px;">
+<h1 style="font-size:2.4rem; letter-spacing:2px; margin-bottom:12px;">EduLink</h1>
+<p style="font-style:italic; color:#555; max-width:480px; margin:0 auto 28px;">
+        Platforma koja spaja firme, profesore i polaznike kroz strukturiranu i mjerljivu edukaciju.
+      </p>
+<div style="display:flex; gap:10px; justify-content:center;">
+<button class="btn btn-primary" onclick="showPage('register')">Registrirajte se</button>
+<button class="btn" onclick="showPage('courses')">Pregledajte tečajeve</button>
+</div>
+</div>
+<div class="section">
+<div class="section-title">Odaberite ulogu</div>
+<div class="card-grid">
+<div class="card">
+<h3>Firma</h3>
+<span class="tag">NARUČITELJ</span>
+<p>Raspisujte natječaje, odabirite instruktore i pratite napredak zaposlenika.</p>
+<button class="btn btn-primary" onclick="showPage('register')">Registriraj firmu</button>
+</div>
+<div class="card">
+<h3>Profesor</h3>
+<span class="tag">INSTRUKTOR</span>
+<p>Pregledajte dostupne natječaje, prijavite se i provodite nastavu.</p>
+<button class="btn btn-primary" onclick="showPage('register')">Registriraj se</button>
+</div>
+<div class="card">
+<h3>Polaznik</h3>
+<span class="tag">STUDENT / JAVNOST</span>
+<p>Pohađajte tečajeve, predajte zadaće i dobijte certifikat.</p>
+<button class="btn btn-primary" onclick="showPage('login')">Prijavi se</button>
+</div>
+</div>
+</div>
+<div class="section">
+<div class="section-title">Kako funkcionira</div>
+<div style="display:grid; grid-template-columns: repeat(3,1fr); gap:16px; text-align:center;">
+<div style="border:1px solid #ddd; padding:16px;">
+<div style="font-size:1.4rem; font-weight:bold; margin-bottom:6px;">01</div>
+<strong style="font-size:12px; letter-spacing:1px;">FIRMA RASPISUJE</strong>
+<p style="font-size:12px; color:#666; margin-top:6px; line-height:1.5;">Definira temu, trajanje, broj mjesta i honorar</p>
+</div>
+<div style="border:1px solid #ddd; padding:16px;">
+<div style="font-size:1.4rem; font-weight:bold; margin-bottom:6px;">02</div>
+<strong style="font-size:12px; letter-spacing:1px;">PROFESOR SE PRIJAVLJUJE</strong>
+<p style="font-size:12px; color:#666; margin-top:6px; line-height:1.5;">Pregledava natječaje i podnosi prijavu</p>
+</div>
+<div style="border:1px solid #ddd; padding:16px;">
+<div style="font-size:1.4rem; font-weight:bold; margin-bottom:6px;">03</div>
+<strong style="font-size:12px; letter-spacing:1px;">POLAZNIK NAPREDUJE</strong>
+<p style="font-size:12px; color:#666; margin-top:6px; line-height:1.5;">Pohađa, polaže ispit, dobiva certifikat</p>
+</div>
+</div>
+</div>
+<div class="app-footer">EduLink © 2026  ·  Vedran Marić, Ante Pavlović, Dragan Arapović, Leo Petrović</div>
+</div>
+<div class="page-desc">
+<strong>Stranica 01 — Naslovna.</strong>
+    Javna stranica dostupna svim posjetiteljima. Sadrži: navigacijsku traku s gumbima Prijava i Registracija, kratki uvod u platformu s pozivom na akciju, tri kartice za odabir uloge, i prikaz koraka rada platforme (01 Firma raspisuje → 02 Profesor se prijavljuje → 03 Polaznik napreduje).
+  </div>
+</div>
+<!-- =========================================
+     02 — REGISTRACIJA
+     ========================================= -->
+<div class="page" id="page-register">
+<div class="wrap">
+<nav class="app-nav">
+<span class="logo">EduLink</span>
+<div class="nav-right">
+<button class="btn" onclick="showPage('login')">Prijava</button>
+</div>
+</nav>
+<div class="section">
+<div class="form-wrap">
+<h2>Registracija</h2>
+<div class="section-title" style="margin-bottom:10px;">Vrsta računa</div>
+<div class="radio-group">
+<label><input checked="" name="role" onchange="updateRoleFields()" type="radio" value="polaznik"/> Polaznik</label>
+<label><input name="role" onchange="updateRoleFields()" type="radio" value="profesor"/> Profesor</label>
+<label><input name="role" onchange="updateRoleFields()" type="radio" value="firma"/> Firma</label>
+</div>
+<div class="field">
+<label>Ime i prezime / Naziv</label>
+<input placeholder="Npr. Ana Horvat ili Infobip d.o.o." type="text"/>
+</div>
+<div class="field">
+<label>E-mail adresa</label>
+<input placeholder="email@primjer.hr" type="email"/>
+</div>
+<div class="field">
+<label>Lozinka</label>
+<input placeholder="Min. 8 znakova" type="password"/>
+</div>
+<div class="field">
+<label>Ponovi lozinku</label>
+<input placeholder="" type="password"/>
+</div>
+<div id="firma-extra" style="display:none;">
+<div class="field">
+<label>OIB firme</label>
+<input placeholder="12345678901" type="text"/>
+</div>
+</div>
+<button class="btn btn-primary" onclick="showPage('login')" style="width:100%; margin-top:6px;">Stvori račun</button>
+<div class="form-footer">
+          Već imate račun? <a href="#" onclick="showPage('login')">Prijavite se</a>
+</div>
+<div class="alert info" id="profesor-napomena" style="margin-top:14px; font-size:11px; display:none;">
+<strong>Napomena za profesore:</strong> Račun profesora zahtijeva odobrenje administratora platforme.
+        </div>
+</div>
+</div>
+<div class="app-footer">EduLink © 2026</div>
+</div>
+<div class="page-desc">
+<strong>Stranica 02 — Registracija.</strong>
+    Radio-gumbi na vrhu određuju vrstu računa (Polaznik / Profesor / Firma). Forma za Firmu otkriva dodatno polje za OIB (papirni "overlay" komad). Profesori dobivaju upozorenje o potrebnom odobrenju. Gumb "Stvori račun" vodi na Prijavu.
+  </div>
+</div>
+<!-- =========================================
+     03 — PRIJAVA
+     ========================================= -->
+<div class="page" id="page-login">
+<div class="wrap">
+<nav class="app-nav">
+<span class="logo">EduLink</span>
+<div class="nav-right">
+<button class="btn btn-primary" onclick="showPage('register')">Registracija</button>
+</div>
+</nav>
+<div class="section">
+<div class="form-wrap">
+<h2>Prijava</h2>
+<div class="field">
+<label>E-mail adresa</label>
+<input placeholder="email@primjer.hr" type="email"/>
+</div>
+<div class="field">
+<label>Lozinka</label>
+<input placeholder="" type="password"/>
+</div>
+<div style="text-align:right; margin-bottom:12px;">
+<a href="javascript:void(0)" onclick="showActionPopup('Obnova lozinke', 'Na unesenu e-mail adresu poslana je poveznica za obnovu lozinke.', 'Akcija: resetiranje lozinke')" style="font-size:11px; color:#555;">Zaboravili ste lozinku?</a>
+</div>
+<button class="btn btn-primary" onclick="showPage('courses')" style="width:100%;">Prijavi se</button>
+<div class="form-footer">
+          Nemate račun? <a href="#" onclick="showPage('register')">Registrirajte se</a>
+</div>
+</div>
+</div>
+<div class="app-footer">EduLink © 2026</div>
+</div>
+<div class="page-desc">
+<strong>Stranica 03 — Prijava.</strong>
+    Standardna forma s e-mailom i lozinkom. Link "Zaboravili ste lozinku?" te link na registraciju. Nakon prijave korisnik se preusmjerava na Popis tečajeva (ili nadzornu ploču ovisno o ulozi — u papirnom prototipu to simulira voditelj prikaza).
+  </div>
+</div>
+<!-- =========================================
+     04 — POPIS TEČAJEVA
+     ========================================= -->
+<div class="page" id="page-courses">
+<div class="wrap">
+<nav class="app-nav">
+<span class="logo">EduLink</span>
+<a class="active" href="javascript:void(0)" onclick="showPage('courses')">Tečajevi</a>
+<a href="javascript:void(0)" onclick="showPage('dashboard-firma')">Natječaji</a>
+<div class="nav-right">
+<span class="role-badge">Polaznik</span>
+<div class="avatar">👤</div>
+</div>
+</nav>
+<div class="section">
+<div class="section-title">Popis tečajeva</div>
+<div class="filter-bar">
+<input placeholder="Pretražite tečajeve..." type="text"/>
+<select><option>Sve kategorije</option><option>Razvoj softvera</option><option>Dizajn</option><option>Marketing</option><option>Sigurnost</option></select>
+<select><option>Status</option><option>Slobodna mjesta</option><option>Puna</option></select>
+<button class="btn-sm" onclick="showActionPopup('Rezultati pretrage', 'Prikazani su tečajevi koji odgovaraju odabranim kriterijima.', 'Filter: sve kategorije · Status: slobodna mjesta')">Pretraži</button>
+</div>
+<div class="course-row">
+<div class="course-num">1</div>
+<div class="course-info">
+<strong>Python za analizu podataka</strong>
+<span>Prof. Tomislav Marić  ·  8 tjedana  ·  Razvoj softvera</span>
+</div>
+<span class="status-badge">12/20 MJESTA</span>
+<button class="btn-sm" onclick="showPage('course-detail')">Detalji</button>
+</div>
+<div class="course-row">
+<div class="course-num">2</div>
+<div class="course-info">
+<strong>React i moderni frontend razvoj</strong>
+<span>Dr. Marko Kovač  ·  12 tjedana  ·  Razvoj softvera</span>
+</div>
+<span class="status-badge">18/20 MJESTA</span>
+<button class="btn-sm" onclick="showPage('course-detail')">Detalji</button>
+</div>
+<div class="course-row">
+<div class="course-num">3</div>
+<div class="course-info">
+<strong>Osnove kibernetičke sigurnosti</strong>
+<span>Ivan Hodžić  ·  6 tjedana  ·  Sigurnost</span>
+</div>
+<span class="status-badge">4/15 MJESTA</span>
+<button class="btn-sm" onclick="showPage('course-detail')">Detalji</button>
+</div>
+<div class="course-row">
+<div class="course-num">4</div>
+<div class="course-info">
+<strong>Digitalni marketing i SEO</strong>
+<span>Sanja Begić  ·  10 tjedana  ·  Marketing</span>
+</div>
+<span class="status-badge">8/25 MJESTA</span>
+<button class="btn-sm" onclick="showPage('course-detail')">Detalji</button>
+</div>
+<div class="course-row">
+<div class="course-num">5</div>
+<div class="course-info">
+<strong>UI/UX dizajn principi</strong>
+<span>Ana Jurić  ·  6 tjedana  ·  Dizajn</span>
+</div>
+<span class="status-badge">20/20 MJESTA</span>
+<button class="btn-sm" onclick="showPopup('modal-closed')">Detalji</button>
+</div>
+</div>
+<div class="app-footer">EduLink © 2026</div>
+</div>
+<div class="page-desc">
+<strong>Stranica 04 — Popis tečajeva.</strong>
+    Dostupno svim prijavljenim korisnicima. Sadrži traku za pretraživanje i filtre (kategorija, status). Svaki red prikazuje naziv, instruktora, trajanje, popunjenost mjesta i gumb Detalji. Papirni "overlay" za dropdown filtre: posebni komadi papira koji se lijepe.
+  </div>
+</div>
+<!-- =========================================
+     05 — PREGLED TEČAJA (pogled polaznika / profesora)
+     ========================================= -->
+<div class="page" id="page-course-detail">
+<div class="wrap">
+<nav class="app-nav">
+<span class="logo">EduLink</span>
+<a href="#" onclick="showPage('courses')">Tečajevi</a>
+<div class="nav-right">
+<span class="role-badge">Polaznik</span>
+<div class="avatar">👤</div>
+</div>
+</nav>
+<div class="section">
+<div class="breadcrumb">
+<a href="#" onclick="showPage('courses')">Tečajevi</a> › <span>Python za analizu podataka</span>
+</div>
+<div style="display:flex; gap:20px; margin-bottom:20px; align-items:flex-start;">
+<div style="border:1px solid #bbb; width:160px; height:100px; display:flex; align-items:center; justify-content:center; color:#999; font-size:32px; flex-shrink:0;">[ slika ]</div>
+<div style="flex:1;">
+<h2 style="font-size:1.1rem; letter-spacing:1px; margin-bottom:6px;">Python za analizu podataka</h2>
+<p style="font-size:12px; color:#555; margin-bottom:10px;">Naučite Python, pandas, NumPy i osnove strojnog učenja kroz praktične projekte.</p>
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; font-size:12px; margin-bottom:12px;">
+<span>Instruktor: <strong>Prof. Tomislav Marić</strong></span>
+<span>Trajanje: <strong>8 tjedana</strong></span>
+<span>Mjesta: <strong>12 / 20</strong></span>
+<span>Kategorija: <strong>Razvoj softvera</strong></span>
+</div>
+<div style="display:flex; gap:8px; flex-wrap:wrap;">
+<button class="btn btn-primary" onclick="showPopup('modal-success')">Prijavi se na tečaj</button>
+<button class="btn" onclick="showActionPopup('Tečaj spremljen', 'Tečaj je dodan na vaš popis spremljenih tečajeva.', 'Tečaj: Python za analizu podataka')">Spremi za kasnije</button>
+</div>
+</div>
+</div>
+<!-- Popunjenost -->
+<div style="margin-bottom:16px;">
+<div style="font-size:11px; color:#777; margin-bottom:4px;">Popunjenost mjesta: 12/20</div>
+<div class="progress-outer"><div class="progress-inner" style="width:60%;"></div></div>
+</div>
+<!-- Tabovi -->
+<div class="tabs">
+<button class="tab active" onclick="switchTab(this, 'tab-opis')">O tečaju</button>
+<button class="tab" onclick="switchTab(this, 'tab-program')">Program</button>
+<button class="tab" onclick="switchTab(this, 'tab-predavac')">Predavač</button>
+<button class="tab" onclick="switchTab(this, 'tab-materijali')">Materijali</button>
+</div>
+<div class="tab-panel active" id="tab-opis">
+<p style="font-size:13px; color:#444; line-height:1.65;">
+          Tečaj je namijenjen svima koji žele naučiti analizu podataka koristeći Python. Kroz 8 tjedana pokriti ćemo: osnove Pythona, rad s pandas knjižnicom, vizualizaciju podataka te uvod u strojno učenje. Nema preduvjeta — prikladni ste za početnike.
+        </p>
+</div>
+<div class="tab-panel" id="tab-program">
+<table>
+<tr><th>Tjedan</th><th>Tema</th></tr>
+<tr><td>1–2</td><td>Uvod u Python, tipovi podataka, petlje</td></tr>
+<tr><td>3–4</td><td>pandas: čitanje i obrada podataka</td></tr>
+<tr><td>5–6</td><td>Vizualizacija: matplotlib, seaborn</td></tr>
+<tr><td>7</td><td>Uvod u strojno učenje: scikit-learn</td></tr>
+<tr><td>8</td><td>Završni projekt i ispit</td></tr>
+</table>
+</div>
+<div class="tab-panel" id="tab-predavac">
+<div style="display:flex; gap:14px; align-items:flex-start;">
+<div class="avatar" style="width:56px; height:56px; font-size:24px;">👤</div>
+<div>
+<strong>Prof. Tomislav Marić</strong>
+<p style="font-size:12px; color:#555; margin-top:4px;">Docent na Fakultetu elektrotehnike. 10+ godina iskustva u data science projektima za telekomunikacijski sektor.</p>
+</div>
+</div>
+</div>
+<div class="tab-panel" id="tab-materijali">
+<div class="alert info">Materijali su dostupni nakon prijave na tečaj.</div>
+</div>
+</div>
+<div class="app-footer">EduLink © 2026</div>
+</div>
+<div class="page-desc">
+<strong>Stranica 05 — Pregled tečaja (polaznik).</strong>
+    Breadcrumb navigacija. Gornji dio: slika tečaja, naziv, kratki opis, metapodaci u mreži, gumbi Prijavi se i Spremi za kasnije, progress bar popunjenosti. Donji dio: 4 taba — O tečaju, Program (tablica), Predavač, Materijali (zaključani dok se ne prijavite). Papirni "overlay" tabovi: svaki tab je poseban komad papira.
+  </div>
+</div>
+<!-- =========================================
+     06 — KREIRANJE NATJEČAJA (firma)
+     ========================================= -->
+<div class="page" id="page-create-course">
+<div class="wrap">
+<nav class="app-nav">
+<span class="logo">EduLink</span>
+<a href="javascript:void(0)" onclick="showPage('dashboard-firma')">Moji natječaji</a>
+<div class="nav-right">
+<span class="role-badge">Firma</span>
+<div class="avatar">🏢</div>
+</div>
+</nav>
+<div class="section">
+<div class="breadcrumb">
+<a href="javascript:void(0)" onclick="showPage('dashboard-firma')">Moji natječaji</a> › <span>Novi natječaj</span>
+</div>
+<div class="section-title">Novi natječaj za tečaj</div>
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+<div>
+<div class="field">
+<label>Naziv tečaja</label>
+<input placeholder="Npr. Python za analizu podataka" type="text"/>
+</div>
+<div class="field">
+<label>Kategorija</label>
+<select>
+<option>Odaberi kategoriju...</option>
+<option>Razvoj softvera</option>
+<option>Dizajn</option>
+<option>Marketing</option>
+<option>Sigurnost</option>
+<option>Menadžment</option>
+</select>
+</div>
+<div class="field">
+<label>Trajanje (tjedni)</label>
+<input placeholder="8" type="number"/>
+</div>
+<div class="field">
+<label>Broj mjesta za zaposlenike</label>
+<input placeholder="20" type="number"/>
+</div>
+<div class="field">
+<label>Otvoriti javnosti ako ima slobodnih mjesta</label>
+<select>
+<option>Da — besplatno</option>
+<option>Ne</option>
+</select>
+</div>
+</div>
+<div>
+<div class="field">
+<label>Opis / zahtjevi za instruktora</label>
+<textarea placeholder="Opišite što tečaj treba pokriti, koje kompetencije instruktor mora imati, te posebne zahtjeve..."></textarea>
+</div>
+<div class="field">
+<label>Honorar instruktora (EUR)</label>
+<input placeholder="Npr. 1500" type="text"/>
+</div>
+<div class="field">
+<label>Rok za prijave instruktora</label>
+<input placeholder="DD.MM.GGGG" type="text"/>
+</div>
+<div class="field">
+<label>Planirani početak tečaja</label>
+<input placeholder="DD.MM.GGGG" type="text"/>
+</div>
+</div>
+</div>
+<div style="display:flex; gap:10px; justify-content:flex-end; margin-top:16px; border-top:1px solid #eee; padding-top:14px;">
+<button class="btn" onclick="showPage('dashboard-firma')">Odustani</button>
+<button class="btn btn-primary" onclick="showPage('dashboard-firma')">Objavi natječaj</button>
+</div>
+</div>
+<div class="app-footer">EduLink © 2026</div>
+</div>
+<div class="page-desc">
+<strong>Stranica 06 — Kreiranje natječaja (samo firma).</strong>
+    Forma u dva stupca. Lijevo: naziv, kategorija, trajanje, mjesta, otvorenost javnosti. Desno: opis zahtjeva, honorar, rok prijava, planirani početak. Dropdown za "Kategorija" ima papirni overlay s opcijama. Gumb "Objavi natječaj" vodi na nadzornu ploču firme.
+  </div>
+</div>
+<!-- =========================================
+     07 — NADZORNA PLOČA — FIRMA
+     ========================================= -->
+<div class="page" id="page-dashboard-firma">
+<div class="wrap">
+<nav class="app-nav">
+<span class="logo">EduLink</span>
+<a class="active" href="javascript:void(0)" onclick="showPage('dashboard-firma')">Natječaji</a>
+<a href="javascript:void(0)" onclick="showPage('courses')">Tečajevi</a>
+<a href="javascript:void(0)" onclick="showActionPopup('Zaposlenici', 'Prikazan bi bio popis zaposlenika firme i njihov napredak po tečajevima.', 'Sekcija: zaposlenici firme')">Zaposlenici</a>
+<div class="nav-right">
+<span class="role-badge">Firma</span>
+<div class="avatar">🏢</div>
+</div>
+</nav>
+<div class="section">
+<div class="section-title">Pregled</div>
+<div class="stat-grid">
+<div class="stat-box">
+<div class="stat-num">3</div>
+<div class="stat-lbl">Aktivna natječaja</div>
+</div>
+<div class="stat-box">
+<div class="stat-num">2</div>
+<div class="stat-lbl">Tečaji u tijeku</div>
+</div>
+<div class="stat-box">
+<div class="stat-num">34</div>
+<div class="stat-lbl">Upisani polaznici</div>
+</div>
+<div class="stat-box">
+<div class="stat-num">12</div>
+<div class="stat-lbl">Certifikati izdani</div>
+</div>
+</div>
+</div>
+<div class="section">
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+<div class="section-title" style="margin:0;">Aktivni natječaji</div>
+<button class="btn-sm btn-primary" onclick="showPage('create-course')">+ Novi natječaj</button>
+</div>
+<table>
+<tr>
+<th>Naziv</th>
+<th>Rok prijava</th>
+<th>Prijave prof.</th>
+<th>Status</th>
+<th></th>
+</tr>
+<tr>
+<td>Python za analizu podataka</td>
+<td>15.05.2026.</td>
+<td>4 prijave</td>
+<td><span class="status-badge">AKTIVAN</span></td>
+<td><button class="btn-sm" onclick="showPage('prijave-pregled')">Pregledaj prijave</button></td>
+</tr>
+<tr>
+<td>React i frontend razvoj</td>
+<td>20.05.2026.</td>
+<td>2 prijave</td>
+<td><span class="status-badge">AKTIVAN</span></td>
+<td><button class="btn-sm" onclick="showPage('prijave-pregled')">Pregledaj prijave</button></td>
+</tr>
+<tr>
+<td>Digitalni marketing</td>
+<td>10.05.2026.</td>
+<td>7 prijava</td>
+<td><span class="status-badge">ODABIR</span></td>
+<td><button class="btn-sm" onclick="showPage('prijave-pregled')">Pregledaj prijave</button></td>
+</tr>
+</table>
+</div>
+<div class="section">
+<div class="section-title">Napredak polaznika — Python za analizu podataka</div>
+<table>
+<tr>
+<th>Polaznik</th>
+<th>Pohađanje</th>
+<th>Zadaće</th>
+<th>Ispit</th>
+<th>Status</th>
+</tr>
+<tr>
+<td>Ana Kovačević</td>
+<td>7/8 predavanja</td>
+<td>4/4</td>
+<td>87%</td>
+<td><span class="status-badge">ZAVRŠENO</span></td>
+</tr>
+<tr>
+<td>Marko Ilić</td>
+<td>6/8 predavanja</td>
+<td>3/4</td>
+<td>—</td>
+<td><span class="status-badge">U TIJEKU</span></td>
+</tr>
+<tr>
+<td>Petra Jurić</td>
+<td>8/8 predavanja</td>
+<td>4/4</td>
+<td>92%</td>
+<td><span class="status-badge">ZAVRŠENO</span></td>
+</tr>
+<tr>
+<td>Ivan Šimić</td>
+<td>3/8 predavanja</td>
+<td>1/4</td>
+<td>—</td>
+<td><span class="status-badge">ZAOSTAJE</span></td>
+</tr>
+</table>
+</div>
+<div class="app-footer">EduLink © 2026</div>
+</div>
+<div class="page-desc">
+<strong>Stranica 07 — Nadzorna ploča (firma).</strong>
+    Statistički boxovi na vrhu (natječaji, tečajevi, polaznici, certifikati). Tablica aktivnih natječaja s brojem prijava profesora i gumbom za pregled prijava. Tablica napretka polaznika s pohađanjem, zadaćama i ispitom po svakom polazniku.
+  </div>
+</div>
+<!-- =========================================
+     08 — NADZORNA PLOČA — PROFESOR
+     ========================================= -->
+<div class="page" id="page-dashboard-profesor">
+<div class="wrap">
+<nav class="app-nav">
+<span class="logo">EduLink</span>
+<a class="active" href="javascript:void(0)" onclick="showPage('dashboard-polaznik')">Moji tečajevi</a>
+<a href="javascript:void(0)" onclick="showPage('dashboard-firma')">Natječaji</a>
+<div class="nav-right">
+<span class="role-badge">Profesor</span>
+<div class="avatar">👤</div>
+</div>
+</nav>
+<div class="section">
+<div class="section-title">Pregled</div>
+<div class="stat-grid">
+<div class="stat-box"><div class="stat-num">1</div><div class="stat-lbl">Aktivan tečaj</div></div>
+<div class="stat-box"><div class="stat-num">24</div><div class="stat-lbl">Polaznika</div></div>
+<div class="stat-box"><div class="stat-num">3</div><div class="stat-lbl">Otvoreni natječaji</div></div>
+<div class="stat-box"><div class="stat-num">18</div><div class="stat-lbl">Certifikata izdano</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-title">Aktivni tečaj — Python za analizu podataka</div>
+<div class="tabs">
+<button class="tab active" onclick="switchTab(this,'ptab-materijali')">Materijali</button>
+<button class="tab" onclick="switchTab(this,'ptab-prisutnost')">Prisutnost</button>
+<button class="tab" onclick="switchTab(this,'ptab-zadace')">Zadaće</button>
+<button class="tab" onclick="switchTab(this,'ptab-ispit')">Ispit</button>
+</div>
+<div class="tab-panel active" id="ptab-materijali">
+<table>
+<tr><th>#</th><th>Naziv datoteke</th><th>Tjedan</th><th></th></tr>
+<tr><td>1</td><td>Uvod_Python.pdf</td><td>1</td><td><button class="btn-sm" onclick="showActionPopup('Uređivanje materijala', 'Otvoren je prikaz za uređivanje odabranog materijala.', 'Materijal: Uvod_Python.pdf')">Uredi</button></td></tr>
+<tr><td>2</td><td>pandas_osnove.ipynb</td><td>3</td><td><button class="btn-sm" onclick="showActionPopup('Uređivanje materijala', 'Otvoren je prikaz za uređivanje odabranog materijala.', 'Materijal: pandas_osnove.ipynb')">Uredi</button></td></tr>
+</table>
+<button class="btn-sm" onclick="showActionPopup('Dodavanje materijala', 'Otvoren je obrazac za dodavanje novog nastavnog materijala.', 'Akcija: novi materijal za Python tečaj')" style="margin-top:10px;">+ Dodaj materijal</button>
+</div>
+<div class="tab-panel" id="ptab-prisutnost">
+<table>
+<tr><th>Polaznik</th><th>Pred. 1</th><th>Pred. 2</th><th>Pred. 3</th><th>Pred. 4</th></tr>
+<tr><td>Ana Kovačević</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr>
+<tr><td>Marko Ilić</td><td>✓</td><td>✗</td><td>✓</td><td>✓</td></tr>
+<tr><td>Petra Jurić</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr>
+<tr><td>Ivan Šimić</td><td>✓</td><td>✗</td><td>✗</td><td>✓</td></tr>
+</table>
+</div>
+<div class="tab-panel" id="ptab-zadace">
+<table>
+<tr><th>Polaznik</th><th>Zadaća 1</th><th>Zadaća 2</th><th>Zadaća 3</th><th>Zadaća 4</th></tr>
+<tr><td>Ana Kovačević</td><td>9/10</td><td>10/10</td><td>8/10</td><td>9/10</td></tr>
+<tr><td>Marko Ilić</td><td>7/10</td><td>6/10</td><td>—</td><td>8/10</td></tr>
+<tr><td>Petra Jurić</td><td>10/10</td><td>10/10</td><td>9/10</td><td>10/10</td></tr>
+<tr><td>Ivan Šimić</td><td>5/10</td><td>—</td><td>—</td><td>—</td></tr>
+</table>
+</div>
+<div class="tab-panel" id="ptab-ispit">
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+<strong style="font-size:13px;">Završni ispit — Python za analizu podataka</strong>
+<button class="btn-sm btn-primary" onclick="showActionPopup('Kreiranje ispita', 'Otvoren je obrazac za izradu završnog ispita.', 'Tečaj: Python za analizu podataka')">Kreiraj ispit</button>
+</div>
+<div class="alert info">Ispit još nije kreiran. Kliknite "Kreiraj ispit" za dodavanje pitanja.</div>
+</div>
+</div>
+<div class="section">
+<div class="section-title">Dostupni natječaji za prijavu</div>
+<div class="course-row">
+<div class="course-info">
+<strong>Machine Learning napredni kurs — TechCorp d.o.o.</strong>
+<span>Rok: 01.06.2026.  ·  Honorar: 2000 EUR  ·  10 tjedana</span>
+</div>
+<button class="btn-sm btn-primary" onclick="showActionPopup('Prijava poslana', 'Vaša prijava za natječaj je uspješno evidentirana.', 'Natječaj: Machine Learning napredni kurs')">Pošalji prijavu</button>
+</div>
+<div class="course-row">
+<div class="course-info">
+<strong>Uvod u DevOps — Infobip d.o.o.</strong>
+<span>Rok: 15.06.2026.  ·  Honorar: 1800 EUR  ·  8 tjedana</span>
+</div>
+<button class="btn-sm btn-primary" onclick="showActionPopup('Prijava poslana', 'Vaša prijava za natječaj je uspješno evidentirana.', 'Natječaj: Uvod u DevOps')">Pošalji prijavu</button>
+</div>
+</div>
+<div class="app-footer">EduLink © 2026</div>
+</div>
+<div class="page-desc">
+<strong>Stranica 08 — Nadzorna ploča (profesor).</strong>
+    Statistički boxovi. Sekcija aktivnog tečaja s tabovima: Materijali (upload), Prisutnost (tablica s ✓/✗), Zadaće (ocjene), Ispit (kreiranje). Sekcija dostupnih natječaja s gumbom za slanje prijave. Papirni "overlay" za svaki tab.
+  </div>
+</div>
+<!-- =========================================
+     09 — NADZORNA PLOČA — POLAZNIK
+     ========================================= -->
+<div class="page" id="page-dashboard-polaznik">
+<div class="wrap">
+<nav class="app-nav">
+<span class="logo">EduLink</span>
+<a class="active" href="javascript:void(0)" onclick="showPage('dashboard-polaznik')">Moji tečajevi</a>
+<a href="#" onclick="showPage('courses')">Svi tečajevi</a>
+<div class="nav-right">
+<span class="role-badge">Polaznik</span>
+<div class="avatar">👤</div>
+</div>
+</nav>
+<div class="section">
+<div class="section-title">Pregled</div>
+<div class="stat-grid">
+<div class="stat-box"><div class="stat-num">2</div><div class="stat-lbl">Upisana tečaja</div></div>
+<div class="stat-box"><div class="stat-num">1</div><div class="stat-lbl">Završeno</div></div>
+<div class="stat-box"><div class="stat-num">3</div><div class="stat-lbl">Zadaće čekaju</div></div>
+<div class="stat-box"><div class="stat-num">1</div><div class="stat-lbl">Certifikat</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-title">Moji tečajevi</div>
+<div style="border:1px solid #ddd; padding:14px; margin-bottom:12px;">
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+<strong>Python za analizu podataka</strong>
+<span class="status-badge">U TIJEKU</span>
+</div>
+<div style="font-size:12px; color:#666; margin-bottom:8px;">Tjedan 4 / 8  ·  Prof. Tomislav Marić</div>
+<div class="progress-outer" style="margin-bottom:10px;"><div class="progress-inner" style="width:50%;"></div></div>
+<div class="tabs">
+<button class="tab active" onclick="switchTab(this,'poltab-mat')">Materijali</button>
+<button class="tab" onclick="switchTab(this,'poltab-zadace')">Zadaće</button>
+<button class="tab" onclick="switchTab(this,'poltab-ispit')">Ispit</button>
+</div>
+<div class="tab-panel active" id="poltab-mat">
+<table>
+<tr><th>Naziv</th><th>Tjedan</th><th></th></tr>
+<tr><td>Uvod_Python.pdf</td><td>1</td><td><button class="btn-sm" onclick="showActionPopup('Preuzimanje materijala', 'Materijal je spreman za preuzimanje.', 'Datoteka: Uvod_Python.pdf')">Preuzmi</button></td></tr>
+<tr><td>pandas_osnove.ipynb</td><td>3</td><td><button class="btn-sm" onclick="showActionPopup('Preuzimanje materijala', 'Materijal je spreman za preuzimanje.', 'Datoteka: pandas_osnove.ipynb')">Preuzmi</button></td></tr>
+</table>
+</div>
+<div class="tab-panel" id="poltab-zadace">
+<table>
+<tr><th>Zadaća</th><th>Rok</th><th>Status</th><th></th></tr>
+<tr><td>Zadaća 1 — Uvod</td><td>30.04.2026.</td><td><span class="status-badge">PREDANO — 9/10</span></td><td></td></tr>
+<tr><td>Zadaća 2 — pandas</td><td>14.05.2026.</td><td><span class="status-badge">PREDANO — 8/10</span></td><td></td></tr>
+<tr><td>Zadaća 3 — vizualizacija</td><td>28.05.2026.</td><td><span class="status-badge">NIJE PREDANO</span></td><td><button class="btn-sm btn-primary" onclick="showActionPopup('Predaja zadaće', 'Otvoren je obrazac za predaju datoteke zadaće.', 'Zadaća: vizualizacija podataka')">Predaj</button></td></tr>
+</table>
+</div>
+<div class="tab-panel" id="poltab-ispit">
+<div class="alert info">Ispit je dostupan nakon završetka svih tjedana. Tjedan 4/8.</div>
+</div>
+</div>
+<div style="border:1px solid #ddd; padding:14px;">
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+<strong>UI/UX dizajn principi</strong>
+<span class="status-badge">ZAVRŠENO</span>
+</div>
+<div style="font-size:12px; color:#666; margin-bottom:8px;">Završen 01.04.2026.  ·  Ocjena ispita: 91%</div>
+<div class="progress-outer" style="margin-bottom:10px;"><div class="progress-inner" style="width:100%;"></div></div>
+<button class="btn btn-primary" onclick="showPage('certifikat')">Preuzmi certifikat</button>
+</div>
+</div>
+<div class="app-footer">EduLink © 2026</div>
+</div>
+<div class="page-desc">
+<strong>Stranica 09 — Nadzorna ploča (polaznik).</strong>
+    Statistički boxovi. Lista upisanih tečajeva: za svaki tečaj progress bar, status i tabovi (Materijali s preuzimanjem, Zadaće s predajom, Ispit). Završeni tečaj prikazuje gumb za preuzimanje certifikata.
+  </div>
+</div>
+<!-- =========================================
+     10 — CERTIFIKAT
+     ========================================= -->
+<div class="page" id="page-certifikat">
+<div class="wrap">
+<nav class="app-nav">
+<span class="logo">EduLink</span>
+<a href="#" onclick="showPage('dashboard-polaznik')">← Natrag</a>
+<div class="nav-right">
+<span class="role-badge">Polaznik</span>
+<div class="avatar">👤</div>
+</div>
+</nav>
+<div class="section" style="text-align:center;">
+<div class="alert success" style="max-width:500px; margin:0 auto 20px;">
+        Čestitamo! Uspješno ste završili tečaj i certifikat je spreman za preuzimanje.
+      </div>
+<div class="cert-box">
+<div style="font-size:10px; letter-spacing:3px; text-transform:uppercase; color:#777; margin-bottom:12px;">Potvrda o završetku</div>
+<h2>EduLink</h2>
+<p style="margin:10px 0 6px; font-size:13px;">Ovim se potvrđuje da je</p>
+<div class="cert-name">Ana Kovačević</div>
+<p>uspješno završila tečaj</p>
+<p style="font-size:1rem; font-weight:bold; margin:10px 0;">UI/UX dizajn principi</p>
+<p style="font-size:12px; color:#555;">Trajanje: 6 tjedana  ·  Ocjena ispita: 91%</p>
+<p style="font-size:12px; color:#555; margin-top:4px;">Datum: 01. travnja 2026.</p>
+<div style="margin-top:24px; display:flex; justify-content:space-around;">
+<div style="text-align:center;">
+<div style="width:80px; border-bottom:1px solid #555; margin:0 auto 4px;"></div>
+<div style="font-size:10px; color:#777; letter-spacing:1px;">Instruktor</div>
+</div>
+<div style="text-align:center;">
+<div style="width:80px; border-bottom:1px solid #555; margin:0 auto 4px;"></div>
+<div style="font-size:10px; color:#777; letter-spacing:1px;">EduLink</div>
+</div>
+</div>
+<div style="margin-top:16px; font-size:10px; color:#aaa; letter-spacing:1px;">ID: EL-2026-AK-004</div>
+</div>
+<div style="display:flex; gap:10px; justify-content:center; margin-top:20px;">
+<button class="btn btn-primary" onclick="showActionPopup('Preuzimanje certifikata', 'Certifikat je pripremljen u PDF formatu.', 'ID certifikata: EL-2026-AK-004')">Preuzmi PDF</button>
+<button class="btn" onclick="showPage('dashboard-polaznik')">Natrag na nadzornu ploču</button>
+</div>
+</div>
+<div class="app-footer">EduLink © 2026</div>
+</div>
+<div class="page-desc">
+<strong>Stranica 10 — Certifikat.</strong>
+    Poruka o uspješnom završetku. Certifikat s dvostrukim rubom (double border), imenima, nazivom tečaja, ocjenom, datumom i ID-jem. Linija za potpis instruktora i platforme. Gumbi: Preuzmi PDF i Natrag.
+  </div>
+</div>
+<!-- =========================================
+     11 — PREGLED PRIJAVA PROFESORA (firma)
+     ========================================= -->
+<div class="page" id="page-prijave-pregled">
+<div class="wrap">
+<nav class="app-nav">
+<span class="logo">EduLink</span>
+<a class="active" href="#" onclick="showPage('dashboard-firma')">Natječaji</a>
+<a href="javascript:void(0)" onclick="showPage('courses')">Tečajevi</a>
+<a href="javascript:void(0)" onclick="showActionPopup('Zaposlenici', 'Prikazan bi bio popis zaposlenika firme i njihov napredak po tečajevima.', 'Sekcija: zaposlenici firme')">Zaposlenici</a>
+<div class="nav-right">
+<span class="role-badge">Firma</span>
+<div class="avatar">🏢</div>
+</div>
+</nav>
+<div class="section">
+<div class="breadcrumb">
+<a href="#" onclick="showPage('dashboard-firma')">Natječaji</a> ›
+        <a href="#" onclick="showPage('dashboard-firma')">Python za analizu podataka</a> ›
+        <span>Prijave profesora</span>
+</div>
+<div style="display:flex; justify-content:space-between; align-items:flex-start; gap:20px; margin-bottom:18px;">
+<div>
+<h2 style="font-size:1.1rem; letter-spacing:1px; margin-bottom:6px;">Prijave profesora</h2>
+<p style="font-size:12px; color:#555;">Natječaj: <strong>Python za analizu podataka</strong>  ·  Rok prijava: <strong>15.05.2026.</strong></p>
+</div>
+<span class="status-badge">AKTIVAN</span>
+</div>
+<div class="stat-grid" style="grid-template-columns:repeat(3,1fr); margin-bottom:4px;">
+<div class="stat-box">
+<div class="stat-num">4</div>
+<div class="stat-lbl">Ukupno prijava</div>
+</div>
+<div class="stat-box">
+<div class="stat-num">2</div>
+<div class="stat-lbl">U razmatranju</div>
+</div>
+<div class="stat-box">
+<div class="stat-num">1</div>
+<div class="stat-lbl">Odabran</div>
+</div>
+</div>
+</div>
+<div class="section">
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+<div class="section-title" style="margin:0;">Pristigle prijave</div>
+<div style="display:flex; gap:6px;">
+<select style="padding:5px 8px; border:1px solid #bbb; font-family:Georgia, serif; font-size:12px;">
+<option>Sve prijave</option>
+<option>U razmatranju</option>
+<option>Odabrane</option>
+<option>Odbijene</option>
+</select>
+</div>
+</div>
+<table>
+<tr>
+<th>Profesor</th>
+<th>Iskustvo</th>
+<th>Tražen honorar</th>
+<th>Datum prijave</th>
+<th>Status</th>
+<th></th>
+</tr>
+<tr>
+<td><strong>Prof. Tomislav Marić</strong><br/><span style="font-size:11px; color:#777;">FER · 10+ godina</span></td>
+<td>10 god.</td>
+<td>1500 EUR</td>
+<td>02.05.2026.</td>
+<td><span class="status-badge">ODABRAN</span></td>
+<td><button class="btn-sm" onclick="showActionPopup('Detalji prijave', 'Prikazani su detalji odabrane prijave profesora.', 'Profesor: Prof. Tomislav Marić')">Detalji</button></td>
+</tr>
+<tr>
+<td><strong>Dr. Marko Kovač</strong><br/><span style="font-size:11px; color:#777;">FOI · data science</span></td>
+<td>7 god.</td>
+<td>1600 EUR</td>
+<td>03.05.2026.</td>
+<td><span class="status-badge">U RAZMATRANJU</span></td>
+<td><button class="btn-sm" onclick="showActionPopup('Detalji prijave', 'Prikazani su detalji odabrane prijave profesora.', 'Profesor: Dr. Marko Kovač')">Detalji</button></td>
+</tr>
+<tr>
+<td><strong>Ivana Babić</strong><br/><span style="font-size:11px; color:#777;">freelance instruktor</span></td>
+<td>4 god.</td>
+<td>1300 EUR</td>
+<td>05.05.2026.</td>
+<td><span class="status-badge">U RAZMATRANJU</span></td>
+<td><button class="btn-sm" onclick="showActionPopup('Detalji prijave', 'Prikazani su detalji odabrane prijave profesora.', 'Profesor: Ivana Babić')">Detalji</button></td>
+</tr>
+<tr>
+<td><strong>Petar Jurišić</strong><br/><span style="font-size:11px; color:#777;">PMF · matematika</span></td>
+<td>2 god.</td>
+<td>1200 EUR</td>
+<td>07.05.2026.</td>
+<td><span class="status-badge">ODBIJEN</span></td>
+<td><button class="btn-sm" onclick="showActionPopup('Detalji prijave', 'Prikazani su detalji odabrane prijave profesora.', 'Profesor: Petar Jurišić')">Detalji</button></td>
+</tr>
+</table>
+</div>
+<div class="section">
+<div class="section-title">Detalji odabrane prijave — Dr. Marko Kovač</div>
+<div style="display:flex; gap:14px; align-items:flex-start; margin-bottom:14px;">
+<div class="avatar" style="width:56px; height:56px; font-size:24px;">👤</div>
+<div style="flex:1;">
+<strong>Dr. Marko Kovač</strong>
+<p style="font-size:12px; color:#555; margin-top:4px; line-height:1.6;">
+            Docent na FOI-ju, 7 godina iskustva u predavanju Pythona i strojnog učenja. Voditelj 3 industrijska data-science projekta.
+            Dostupan za izvođenje termina utorkom i četvrtkom poslijepodne.
+          </p>
+</div>
+</div>
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; font-size:12px; margin-bottom:14px;">
+<span>Tražen honorar: <strong>1600 EUR</strong></span>
+<span>Iskustvo: <strong>7 godina</strong></span>
+<span>Dostupnost: <strong>Ut, Čet</strong></span>
+<span>Reference: <strong>3 industrijska projekta</strong></span>
+</div>
+<div class="alert info" style="font-size:12px;">
+<strong>Motivacijsko pismo:</strong> Tečaj namjeravam strukturirati kroz tjedne praktične zadatke s realnim podacima iz industrije. Naglasak je na pandas radnom toku i jasnoj evaluaciji modela.
+      </div>
+<div style="display:flex; gap:8px; justify-content:flex-end; margin-top:14px;">
+<button class="btn" onclick="showActionPopup('Prijava odbijena', 'Status odabrane prijave promijenjen je u ODBIJEN.', 'Profesor: Dr. Marko Kovač')">Odbij</button>
+<button class="btn" onclick="showActionPopup('Zahtjev poslan', 'Profesoru je poslan zahtjev za dodatne informacije.', 'Profesor: Dr. Marko Kovač')">Traži dodatne informacije</button>
+<button class="btn btn-primary" onclick="showActionPopup('Profesor odabran', 'Profesor je odabran za izvođenje tečaja.', 'Profesor: Dr. Marko Kovač · Status: ODABRAN')">Odaberi profesora</button>
+</div>
+</div>
+<div class="app-footer">EduLink © 2026</div>
+</div>
+<div class="page-desc">
+<strong>Stranica 11 — Pregled prijava profesora (firma).</strong>
+    Otvara se klikom na "Pregledaj prijave" iz nadzorne ploče firme. Breadcrumb vodi natrag na natječaj. Sažetak (ukupno / u razmatranju / odabran), tablica svih pristiglih prijava sa statusom, te detaljni prikaz odabrane prijave s motivacijskim pismom i akcijama (Odbij / Traži dodatne informacije / Odaberi profesora).
+  </div>
+</div>
+<!-- =========================================
+     12 — POP-UP: USPJEŠNA PRIJAVA NA RADIONICU / TEČAJ
+     ========================================= -->
+<div class="modal-overlay" id="modal-success" onclick="closePopupOnBackdrop(event)">
+<div class="modal-card">
+<div class="modal-header">
+<strong>Potvrda prijave</strong>
+<button class="modal-close" onclick="closePopup('modal-success')">×</button>
+</div>
+<div class="modal-body">
+<div class="modal-icon">✓</div>
+<h2>Uspješno ste se prijavili na radionicu</h2>
+<p>Vaša prijava je evidentirana u sustavu. Detalji radionice dostupni su na vašoj nadzornoj ploči.</p>
+<div class="modal-meta">
+<strong>Radionica:</strong> Python za analizu podataka<br/>
+<strong>Status:</strong> Prijava zaprimljena<br/>
+<strong>Sljedeći korak:</strong> Provjerite materijale i raspored predavanja
+      </div>
+</div>
+<div class="modal-footer">
+<button class="btn btn-primary" onclick="closePopup('modal-success'); showPage('dashboard-polaznik')">Idi na nadzornu ploču</button>
+<button class="btn" onclick="closePopup('modal-success')">Zatvori</button>
+</div>
+</div>
+</div>
+<!-- =========================================
+     13 — POP-UP: PRIJAVA NA TEČAJ VIŠE NIJE MOGUĆA
+     ========================================= -->
+<div class="modal-overlay" id="modal-closed" onclick="closePopupOnBackdrop(event)">
+<div class="modal-card">
+<div class="modal-header">
+<strong>Prijava zatvorena</strong>
+<button class="modal-close" onclick="closePopup('modal-closed')">×</button>
+</div>
+<div class="modal-body">
+<div class="modal-icon">!</div>
+<h2>Prijava na tečaj više nije moguća</h2>
+<p>Broj mjesta je popunjen ili je rok za prijavu istekao. Možete pregledati druge dostupne tečajeve.</p>
+<div class="modal-meta">
+<strong>Tečaj:</strong> UI/UX dizajn principi<br/>
+<strong>Popunjenost:</strong> 20 / 20 mjesta<br/>
+<strong>Status:</strong> Prijave zatvorene
+      </div>
+</div>
+<div class="modal-footer">
+<button class="btn btn-primary" onclick="closePopup('modal-closed'); showPage('courses')">Pregledaj druge tečajeve</button>
+<button class="btn" onclick="closePopup('modal-closed')">Zatvori</button>
+</div>
+</div>
+</div>
+
+<!-- =========================================
+     DODATNI POP-UP: OPĆA POTVRDA AKCIJE
+     Koristi se za sve manje akcije kako u prototipu ne bi postojale neaktivne tipke.
+     ========================================= -->
+<div class="modal-overlay" id="modal-action" onclick="closePopupOnBackdrop(event)">
+<div class="modal-card">
+<div class="modal-header">
+<strong id="action-modal-title">Akcija izvršena</strong>
+<button class="modal-close" onclick="closePopup('modal-action')">×</button>
+</div>
+<div class="modal-body">
+<div class="modal-icon">i</div>
+<h2 id="action-modal-heading">Akcija izvršena</h2>
+<p id="action-modal-message">Odabrana akcija je uspješno obrađena u prototipu.</p>
+<div class="modal-meta" id="action-modal-meta">Status: simulirana interakcija</div>
+</div>
+<div class="modal-footer">
+<button class="btn btn-primary" onclick="closePopup('modal-action')">U redu</button>
+</div>
+</div>
+</div>
+<script>
+function showActionPopup(title, message, meta) {
+  document.getElementById('action-modal-title').textContent = title || 'Akcija izvršena';
+  document.getElementById('action-modal-heading').textContent = title || 'Akcija izvršena';
+  document.getElementById('action-modal-message').textContent = message || 'Odabrana akcija je uspješno obrađena u prototipu.';
+  document.getElementById('action-modal-meta').textContent = meta || 'Status: simulirana interakcija';
+  showPopup('modal-action');
+}
+
+function showPopup(id) {
+  document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+  const modal = document.getElementById(id);
+  if (modal) modal.classList.add('active');
+}
+
+function closePopup(id) {
+  const modal = document.getElementById(id);
+  if (modal) modal.classList.remove('active');
+}
+
+function closePopupOnBackdrop(event) {
+  if (event.target.classList.contains('modal-overlay')) {
+    event.target.classList.remove('active');
+  }
+}
+
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.proto-nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  window.scrollTo(0, 0);
+  // Označi aktivan gumb
+  const btns = document.querySelectorAll('.proto-nav button');
+  btns.forEach(b => {
+    if (b.getAttribute('onclick') && b.getAttribute('onclick').includes("'" + name + "'")) {
+      b.classList.add('active');
+    }
+  });
+}
+
+function switchTab(el, panelId) {
+  // Pronađi sve tabove i panele unutar istog containera
+  const tabsContainer = el.closest('.tabs');
+  const sectionContainer = tabsContainer.parentElement;
+  tabsContainer.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  sectionContainer.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  const panel = document.getElementById(panelId);
+  if (panel) panel.classList.add('active');
+}
+
+function updateRoleFields() {
+  const selected = document.querySelector('input[name="role"]:checked');
+  const role = selected ? selected.value : 'polaznik';
+  document.getElementById('firma-extra').style.display = (role === 'firma') ? 'block' : 'none';
+  document.getElementById('profesor-napomena').style.display = (role === 'profesor') ? 'block' : 'none';
+}
+</script>
+</body>
+</html>

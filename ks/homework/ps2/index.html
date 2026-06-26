@@ -1,0 +1,373 @@
+<!doctype html>
+
+<!--
+Suradnici: Leo Petrović, Vedran Marić, Ante Pavlović, Dragan Arapović
+ -->
+
+<html lang="en">
+  <head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+    <title>Checkerboard</title>
+
+    <link rel="stylesheet" type="text/css" href="mainLayout.css" />
+
+    <script
+      type="text/javascript"
+      src="external_js/jquery-1.9.0.min.js"
+    ></script>
+    <script type="text/javascript" src="checker.js"></script>
+    <script type="text/javascript" src="boardEvent.js"></script>
+    <script type="text/javascript" src="board.js"></script>
+    <script type="text/javascript" src="rules.js"></script>
+
+    <script type="text/javascript">
+      $.extend({
+        getUrlVars: function () {
+          var vars = [],
+            hash;
+
+          // Uzimaju se svi parametri nakon znaka ?
+          var hashes = window.location.href
+            .slice(window.location.href.indexOf("?") + 1)
+            .split("&");
+
+          // Svaki parametar se razdvaja na ime i vrijednost
+          for (var i = 0; i < hashes.length; i++) {
+            hash = hashes[i].split("=");
+            vars.push(hash[0]);
+            vars[hash[0]] = hash[1];
+          }
+
+          return vars;
+        },
+
+        // Vraća vrijednost jednog URL parametra
+        getUrlVar: function (name) {
+          return $.getUrlVars()[name];
+        },
+      });
+
+      var DEFAULT_BOARD_SIZE = 8;
+      var BOARD_PIXEL_SIZE = 400;
+
+      // Glavni objekti igre
+      var board;
+      var rules;
+
+      var whoseTurn = "black";
+
+      // Vraća smjer kretanja za svaku boju
+      var directionOf = function (color) {
+        if (color == "black") {
+          return -1;
+        }
+
+        return 1;
+      };
+
+      // Računa veličinu jednog polja na ploči
+      var squareSize = function () {
+        return BOARD_PIXEL_SIZE / board.size();
+      };
+
+      // Mijenja red igranja i ažurira prikaz teksta
+      var toggleTurn = function () {
+        if (whoseTurn == "black") {
+          whoseTurn = "red";
+        } else {
+          whoseTurn = "black";
+        }
+
+        // Ispisuje čiji je red
+        $("#turnDisplay").text(
+          whoseTurn.charAt(0).toUpperCase() + whoseTurn.slice(1) + " Turn",
+        );
+
+        // Mijenja stil prikaza ovisno o igraču
+        if (whoseTurn == "black") {
+          $("#turnDisplay").removeClass("redTurn").addClass("blackTurn");
+        } else {
+          $("#turnDisplay").removeClass("blackTurn").addClass("redTurn");
+        }
+      };
+
+      // Crta ploču za dame
+      function drawBoard() {
+        var size = board.size();
+        var sq = squareSize();
+
+        // Briše prethodni sadržaj ploče
+        $("#checkerboard").empty();
+
+        // Prolazi kroz svaki red i stupac
+        for (var row = 0; row < size; row++) {
+          for (var col = 0; col < size; col++) {
+            var square = $("<div></div>");
+
+            square.addClass("square");
+
+            // Postavlja veličinu i poziciju svakog polja
+            square.css({
+              width: sq + "px",
+              height: sq + "px",
+              left: col * sq + "px",
+              top: row * sq + "px",
+            });
+
+            // Gornje lijevo polje je bijelo
+            if ((row + col) % 2 == 0) {
+              square.addClass("whiteSquare");
+            } else {
+              square.addClass("graySquare");
+            }
+
+            $("#checkerboard").append(square);
+          }
+        }
+
+        // Canvas se koristi za crtanje žute strelice
+        var canvas = $("<canvas></canvas>");
+        canvas.attr("id", "arrowCanvas");
+        canvas.attr("width", BOARD_PIXEL_SIZE);
+        canvas.attr("height", BOARD_PIXEL_SIZE);
+
+        $("#checkerboard").append(canvas);
+      }
+
+      // Odabire sliku figure prema boji i tome je li figura kralj
+      function imageForChecker(checker) {
+        if (checker.color == "red" && checker.isKing) {
+          return "graphics/red-king.png";
+        }
+
+        if (checker.color == "red") {
+          return "graphics/red-piece.png";
+        }
+
+        if (checker.color == "black" && checker.isKing) {
+          return "graphics/black-king.png";
+        }
+
+        return "graphics/black-piece.png";
+      }
+
+      // Crta sve figure na ploči
+      function drawCheckers() {
+        // Briše stare prikaze figura
+        $(".checker").remove();
+
+        var checkers = board.getAllCheckers();
+        var sq = squareSize();
+
+        // Za svaku figuru napravi HTML img element
+        for (var i = 0; i < checkers.length; i++) {
+          var checker = checkers[i];
+
+          var img = $("<img />");
+          img.addClass("checker");
+          img.attr("src", imageForChecker(checker));
+
+          // Postavlja figuru na odgovarajuće polje
+          img.css({
+            width: sq + "px",
+            height: sq + "px",
+            left: checker.col * sq + "px",
+            top: checker.row * sq + "px",
+          });
+
+          $("#checkerboard").append(img);
+        }
+      }
+
+      // Briše strelicu s canvasa
+      function clearArrow() {
+        var canvas = document.getElementById("arrowCanvas");
+
+        if (canvas == null) {
+          return;
+        }
+
+        var ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, BOARD_PIXEL_SIZE, BOARD_PIXEL_SIZE);
+      }
+
+      // Crta žutu strelicu od starog do novog mjesta figure
+      function drawArrow(fromRow, fromCol, toRow, toCol) {
+        clearArrow();
+
+        var canvas = document.getElementById("arrowCanvas");
+        var ctx = canvas.getContext("2d");
+        var sq = squareSize();
+
+        // Računa središte početnog i završnog polja
+        var startX = fromCol * sq + sq / 2;
+        var startY = fromRow * sq + sq / 2;
+        var endX = toCol * sq + sq / 2;
+        var endY = toRow * sq + sq / 2;
+
+        var headLength = 15;
+        var angle = Math.atan2(endY - startY, endX - startX);
+
+        // Stil strelice
+        ctx.strokeStyle = "yellow";
+        ctx.fillStyle = "yellow";
+        ctx.lineWidth = 6;
+
+        // Crta glavnu liniju strelice
+        ctx.beginPath();
+        ctx.moveTo(startX, startY);
+        ctx.lineTo(endX, endY);
+        ctx.stroke();
+
+        // Crta vrh strelice
+        ctx.beginPath();
+        ctx.moveTo(endX, endY);
+        ctx.lineTo(
+          endX - headLength * Math.cos(angle - Math.PI / 6),
+          endY - headLength * Math.sin(angle - Math.PI / 6),
+        );
+        ctx.lineTo(
+          endX - headLength * Math.cos(angle + Math.PI / 6),
+          endY - headLength * Math.sin(angle + Math.PI / 6),
+        );
+        ctx.lineTo(endX, endY);
+        ctx.fill();
+      }
+
+      // Pokreće se kada se stranica učita
+      $(document).ready(function () {
+        // Ako u URL-u postoji size i veći je ili jednak 6, koristi se ta veličina
+        if ($.getUrlVar("size") && $.getUrlVar("size") >= 6) {
+          board = new Board(parseInt($.getUrlVar("size")));
+        } else {
+          board = new Board(DEFAULT_BOARD_SIZE);
+        }
+
+        // Stvara objekt s pravilima igre
+        rules = new Rules(board);
+
+        // Crta početnu ploču
+        drawBoard();
+
+        // Kada se figura doda na ploču, briše se strelica i ponovno crtaju figure
+        board.addEventListener(
+          "add",
+          function (e) {
+            clearArrow();
+            drawCheckers();
+          },
+          true,
+        );
+
+        // Kada se figura pomakne, nacrta se nova pozicija i strelica
+        board.addEventListener(
+          "move",
+          function (e) {
+            drawCheckers();
+            drawArrow(
+              e.details.fromRow,
+              e.details.fromCol,
+              e.details.toRow,
+              e.details.toCol,
+            );
+          },
+          true,
+        );
+
+        // Kada se figura ukloni, ponovno se crtaju figure
+        board.addEventListener(
+          "remove",
+          function (e) {
+            drawCheckers();
+          },
+          true,
+        );
+
+        // Kada figura postane kralj, ponovno se crta s novom slikom
+        board.addEventListener(
+          "promote",
+          function (e) {
+            drawCheckers();
+          },
+          true,
+        );
+
+        // Gumb za novu igru
+        $("#btnNewGame").click(function (evt) {
+          whoseTurn = "black";
+
+          // Dva puta se poziva kako bi prikaz ostao na Black Turn
+          toggleTurn();
+          toggleTurn();
+
+          clearArrow();
+          board.prepareNewGame();
+        });
+
+        // Gumb za automatski potez
+        $("#btnAutoMove").click(function (evt) {
+          var playerColor = whoseTurn;
+          var playerDirection = directionOf(playerColor);
+
+          // Pokušava napraviti slučajni potez za trenutnog igrača
+          var result = rules.makeRandomMove(playerColor, playerDirection);
+
+          // Ako je potez uspješan, mijenja se red igranja
+          if (result != null) {
+            toggleTurn();
+          }
+        });
+
+        // Početni prikaz reda igranja
+        $("#turnDisplay").text("Black Turn").addClass("blackTurn");
+
+        // Postavlja početnu igru i figure
+        board.prepareNewGame();
+      });
+    </script>
+  </head>
+
+  <body>
+    <table id="mainTable">
+      <tr>
+        <td id="navigation">
+          <table>
+            <tr>
+              <td>
+                <div id="turnDisplay"></div>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <input
+                  id="btnNewGame"
+                  type="button"
+                  name="new"
+                  value="New Game"
+                />
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <input
+                  id="btnAutoMove"
+                  type="button"
+                  name="auto"
+                  value="Auto Move"
+                />
+              </td>
+            </tr>
+          </table>
+        </td>
+
+        <td id="content">
+          <div id="checkerboard">
+            <canvas id="arrowCanvas"></canvas>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
