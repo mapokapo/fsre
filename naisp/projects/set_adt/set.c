@@ -65,7 +65,6 @@ typedef struct {
     BstNode *root;
     size_t size;
 } BstSet;
-
 static void free_value(Set *set, void *value)
 {
     if (set->free_fn != NULL) {
@@ -226,7 +225,6 @@ static void array_for_each(const Set *set, ForEachFn fn, void *ctx)
         fn(array->items[i], ctx);
     }
 }
-
 static void list_destroy(Set *set)
 {
     ListSet *list = set->impl;
@@ -308,7 +306,6 @@ static void list_for_each(const Set *set, ForEachFn fn, void *ctx)
         fn(node->data, ctx);
     }
 }
-
 static size_t hash_index(const Set *set, const void *value, size_t bucket_count)
 {
     return set->hash(value) % bucket_count;
@@ -443,7 +440,6 @@ static void hash_for_each(const Set *set, ForEachFn fn, void *ctx)
         }
     }
 }
-
 static BstNode *bst_node_create(void *value)
 {
     BstNode *node = malloc(sizeof(*node));
@@ -595,7 +591,6 @@ static void bst_for_each(const Set *set, ForEachFn fn, void *ctx)
 
     bst_for_each_node(bst->root, fn, ctx);
 }
-
 static const SetOps ARRAY_OPS = {
     array_destroy,
     array_insert_owned,
@@ -603,7 +598,6 @@ static const SetOps ARRAY_OPS = {
     array_contains,
     array_for_each
 };
-
 static const SetOps LIST_OPS = {
     list_destroy,
     list_insert_owned,
@@ -611,7 +605,6 @@ static const SetOps LIST_OPS = {
     list_contains,
     list_for_each
 };
-
 static const SetOps HASH_OPS = {
     hash_destroy,
     hash_insert_owned,
@@ -627,7 +620,6 @@ static const SetOps BST_OPS = {
     bst_contains,
     bst_for_each
 };
-
 static int set_init_impl(Set *set)
 {
     ArraySet *array;
@@ -688,7 +680,6 @@ static int set_init_impl(Set *set)
 
     return 0;
 }
-
 Set *set_create(SetType type, SetCompare cmp, SetHash hash, SetCopy copy, SetFree free_fn)
 {
     Set *set;
@@ -794,7 +785,6 @@ size_t set_size(const Set *set)
 
     return 0;
 }
-
 typedef struct {
     Set *result;
     const Set *other;
